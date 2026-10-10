@@ -16,16 +16,16 @@
 | Описание сайта (для поисковиков и превью ссылок) | godmode → настройки → `app_description` |
 | Теги профиля: языки, «Я», хобби, «Для других членов Клуба я...» | `common/data/tags.py`, после правки — `manage.py update_tags` |
 
-## 2. Тексты, оставшиеся от Вастрика — проверить тон
+## 2. Тексты писем, бота и служебных страниц — тоже черновики ИИ
 
-Они нейтральные по смыслу, но написаны его голосом (шутки, «Клубная Карта», «Велком дринк»):
+Переписаны из голоса Вастрика в нейтральный тон, помечены той же фразой:
 
-- письма: `frontend/html/emails/` — особенно `welcome.html`, `registration.html`, `renewal.html`, `auth.html`;
-- темы писем: `notifications/email/users.py`;
-- страница вступления: `frontend/html/auth/join.html`;
-- страница интро для новичков: `frontend/html/users/intro.html`;
-- истёкшее членство: `frontend/html/payments/membership_expired.html` («Нафиг вас, я хочу удалиться»);
-- команда клуба (модераторы, «Парламент», «Министерство вайбов»): `frontend/html/pages/crew.html`;
+- письма: `frontend/html/emails/` (вход, оплата, приглашения, модерация, удаление аккаунта);
+- темы писем: `notifications/email/users.py`, `notifications/email/invites.py`, `payments/management/commands/send_subscription_notifications.py`;
+- напоминания об окончании членства: `frontend/messages/payments/subscription/`;
+- вступление, вход, интро новичка: `frontend/html/auth/`, `frontend/html/users/intro.html`;
+- взносы и истёкшее членство: `frontend/html/users/edit/payments.html`, `frontend/html/payments/`;
+- команда клуба: `frontend/html/pages/crew.html` — разделы «Хранители атмосферы», «Организаторы», «Организаторы офлайн-встреч» показываются только когда у кого-то есть соответствующая ачивка (`parliament_member`, `vibe_minister`, `offline_org`), а написать им можно, только если задан чат (`TELEGRAM_PARLIAMENT_CHAT_ID` и др.);
 - сообщения Telegram-бота: `bot/config.py`, `bot/handlers/`.
 
 ## 3. Решения, которые ещё не приняты
@@ -59,6 +59,8 @@
 
 1. **Почтовый ящик на домене** для писем от людей: `club@домен` (контакты), можно отдельно `moderator@` и `pay@`. Подключается у почтового сервиса для домена (например, Яндекс 360 для бизнеса или VK WorkSpace). Адреса — в `.env`: `CLUB_CONTACT_EMAIL`, `CLUB_MODERATOR_EMAIL`, `CLUB_PAYMENTS_EMAIL`.
 2. **Сервис отправки писем (SMTP)**, через который сайт сам шлёт письма. Это критично: **вход на сайт — по коду из письма**, без настроенной отправки участники не смогут войти. Также письма об оплате и восстановлении доступа. Подойдёт SMTP того же почтового сервиса или отдельный сервис транзакционных писем. В `.env`: `EMAIL_HOST`, `EMAIL_PORT`, `EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD`, `DEFAULT_FROM_EMAIL`. На домене настроить SPF, DKIM и DMARC, иначе письма уйдут в спам.
+
+Пока SMTP не настроен (`EMAIL_HOST` пустой), письма и коды входа печатаются в консоль: при запуске без Docker — в окне `manage.py qcluster`, в Docker — в логах контейнера `queue`. Для локальной проверки этого достаточно.
 
 ## 7. Оплата
 
