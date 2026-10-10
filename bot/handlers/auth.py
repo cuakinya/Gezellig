@@ -13,9 +13,9 @@ from users.models.user import User
 async def command_auth(update: Update, context: CallbackContext) -> None:
     if not update.message or not update.message.text or " " not in update.message.text:
         await update.effective_chat.send_message(
-            "☝️ Нужно прислать мне секретный код. "
-            f"Напиши /auth и код из <a href=\"{settings.APP_HOST}/user/me/edit/bot/\">профиля в Клубе</a> "
-            "через пробел. Только не публикуй его в публичных чатах!",
+            "☝️ (придумано ИИ, TODO заменить) Нужно прислать мне секретный код. "
+            f"Напишите /auth и код из <a href=\"{settings.APP_HOST}/user/me/edit/bot/\">профиля в Клубе</a> "
+            "через пробел. Только не публикуйте его в публичных чатах!",
             parse_mode=ParseMode.HTML
         )
         return None

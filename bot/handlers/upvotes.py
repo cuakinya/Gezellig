@@ -38,7 +38,7 @@ async def upvote(update: Update, context: CallbackContext) -> None:
                 user=user,
                 comment=comment,
             )
-            await update.message.reply_text(f"➜ Заплюсовано 👍" if is_created else "➜ Ты уже плюсовал, поц")
+            await update.message.reply_text(f"➜ Заплюсовано 👍" if is_created else "➜ (придумано ИИ, TODO заменить) Вы уже плюсовали")
 
     if POST_EMOJI_RE.match(reply_text_start):
         post = await get_club_post(update)
@@ -47,7 +47,7 @@ async def upvote(update: Update, context: CallbackContext) -> None:
                 user=user,
                 post=post,
             )
-            await update.message.reply_text("➜ Заплюсовано 👍" if is_created else "➜ Ты уже плюсовал, поц")
+            await update.message.reply_text("➜ Заплюсовано 👍" if is_created else "➜ (придумано ИИ, TODO заменить) Вы уже плюсовали")
 
     return None
 

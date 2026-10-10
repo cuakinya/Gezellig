@@ -75,7 +75,7 @@ async def reply_to_comment(update: Update, context: CallbackContext) -> None:
     text = update.message.text or update.message.caption
     if not text:
         await update.message.reply_text(
-            f"😣 Сорян, я пока умею только в текстовые реплаи"
+            f"😣 (придумано ИИ, TODO заменить) К сожалению, пока я умею отвечать только текстом"
         )
         return None
 
@@ -146,7 +146,7 @@ async def comment_to_post(update: Update, context: CallbackContext) -> None:
     text = update.message.text or update.message.caption
     if not text:
         await update.message.reply_text(
-            f"😣 Сорян, я пока умею только в текстовые реплаи"
+            f"😣 (придумано ИИ, TODO заменить) К сожалению, пока я умею отвечать только текстом"
         )
         return None
 
@@ -156,7 +156,7 @@ async def comment_to_post(update: Update, context: CallbackContext) -> None:
 
     if len(text) < MIN_COMMENT_LEN:
         await update.message.reply_text(
-            f"😋 Твой коммент слишком короткий. Не буду постить его в Клуб, пускай остается в чате"
+            f"😋 (придумано ИИ, TODO заменить) Ваш комментарий слишком короткий, поэтому я не буду публиковать его в Клубе. Он останется в чате"
         )
         return None
 

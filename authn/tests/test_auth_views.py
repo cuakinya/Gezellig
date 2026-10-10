@@ -36,7 +36,7 @@ class ViewsAuthTests(TestCase):
     def test_join_anonymous(self):
         response = self.client.get(reverse("join"))
         # check auth/join.html is rendered
-        self.assertContains(response=response, text="Всегда рады новым членам", status_code=200)
+        self.assertContains(response=response, text="Мы рады новым участникам", status_code=200)
 
     def test_join_authorised(self):
         self.client.authorise()
@@ -145,7 +145,7 @@ class ViewEmailLoginTests(TestCase):
         )
 
         # then
-        self.assertContains(response=response, text="Вам отправлен код!", status_code=200)
+        self.assertContains(response=response, text="Мы отправили вам код", status_code=200)
         issued_code = Code.objects.filter(recipient=self.new_user.email).get()
         self.assertIsNotNone(issued_code)
         self.assertEqual(issued_code.ipaddress, "203.0.113.10")

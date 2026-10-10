@@ -67,7 +67,7 @@ class ActivateInviteTests(TestCase):
         code = Code.objects.filter(recipient=self.existing_victim.email).first()
         self.assertIsNotNone(code)
 
-        self.assertContains(response, "Вам отправлен код!", status_code=200)
+        self.assertContains(response, "Мы отправили вам код", status_code=200)
 
         queued_func_names = set()
         while True:
@@ -101,7 +101,7 @@ class ActivateInviteTests(TestCase):
         code = Code.objects.filter(recipient=new_email).first()
         self.assertIsNotNone(code)
 
-        self.assertContains(response, "Вам отправлен код!", status_code=200)
+        self.assertContains(response, "Мы отправили вам код", status_code=200)
 
     def test_anonymous_new_user_activates_after_email_code(self):
         new_email = "newbie@test.com"
@@ -193,7 +193,7 @@ class ActivateInviteTests(TestCase):
         code = Code.objects.filter(recipient=other_email).first()
         self.assertIsNotNone(code)
 
-        self.assertContains(response, "Вам отправлен код!", status_code=200)
+        self.assertContains(response, "Мы отправили вам код", status_code=200)
 
     def test_activation_adds_days_on_top_of_remaining_membership(self):
         self.client.authorise()
@@ -316,7 +316,7 @@ class ActivateInviteTests(TestCase):
                 reverse("activate_invite", args=[self.invite.code]),
                 data={"email": new_email},
             )
-            self.assertContains(response, "Вам отправлен код!", status_code=200)
+            self.assertContains(response, "Мы отправили вам код", status_code=200)
 
         self.assertEqual(User.objects.filter(email=new_email).count(), 1)
 

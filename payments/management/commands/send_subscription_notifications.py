@@ -17,13 +17,13 @@ log = logging.getLogger(__name__)
 STAGES = (
     {
         "name": "about_to_expire",
-        "subject": "Ваша клубная карта скоро истечёт 😱",
+        "subject": "Членство в Клубе закончится через 2 недели",
         "template": "payments/subscription/about_to_expire.md",
         "expiration_day": lambda: date.today() + timedelta(days=14),
     },
     {
         "name": "expire",
-        "subject": "Ваша подписка закончилась ☠️",
+        "subject": "Членство в Клубе закончилось",
         "template": "payments/subscription/expired.md",
         "expiration_day": lambda: date.today(),
         "include_chats": True,

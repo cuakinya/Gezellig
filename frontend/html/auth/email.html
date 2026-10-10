@@ -5,14 +5,14 @@
         {% if restore %}
             <div class="block block-description block-description-center">
                 ⚠️ <strong>Аккаунт будет восстановлен.</strong>
-                Вы недавно запросили удаление всех своих данных, но если вы войдёте сейчас в аккаунт — всё вернётся как было.
+                Вы недавно запросили удаление всех своих данных, но если вы войдёте сейчас, удаление отменится и всё вернётся как было.
             </div>
         {% endif %}
 
         <div class="block login-code">
-            <div class="login-code-title">🤘 Вам отправлен код!</div>
+            <div class="login-code-title">Мы отправили вам код</div>
 
-            <div class="login-code-description">Введите секретный код доступа к Клубу, который упал вам на почту или в бота</div>
+            <div class="login-code-description">(придумано ИИ, TODO заменить) Введите код для входа в Клуб, который мы отправили вам на почту или в телеграм-бота</div>
 
             <div class="login-code-form">
                 <form action="{% url "email_login_code" %}" method="get">

@@ -52,7 +52,7 @@ class TestMembershipExpiredView(TestCase):
 
         # when
         response = client.get(reverse('membership_expired'))
-        self.assertContains(response=response, text="Ваша клубная карта истекла", status_code=200)
+        self.assertContains(response=response, text="Срок вашего членства закончился", status_code=200)
 
     def test_user_unauthorized(self):
         # given
@@ -82,7 +82,7 @@ class TestDoneView(TestCase):
                                                   product=PRODUCTS["club1"])
 
         response = self.client.get(reverse('done'), data={'reference': existed_payment.reference})
-        self.assertContains(response=response, text="Ваша клубная карта продлена", status_code=200)
+        self.assertContains(response=response, text="Ваше членство в Клубе продлено", status_code=200)
 
     def test_not_club_member(self):
         existed_user: User = User.objects.create(
@@ -228,7 +228,7 @@ class TestStopSubscriptionView(TestCase):
         response = self.client.get(reverse("stop_subscription", args=["sub_own"]))
 
         mocked_stripe.Subscription.cancel.assert_called_once_with("sub_own")
-        self.assertContains(response, "Автопополнение отключено", status_code=200)
+        self.assertContains(response, "Автоплатёж отключён", status_code=200)
 
     def test_rejects_foreign_customer_id(self, mocked_stripe):
         mocked_stripe.Subscription.retrieve.return_value = SimpleNamespace(

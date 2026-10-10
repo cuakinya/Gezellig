@@ -3,7 +3,7 @@
 {% block content %}
     <div class="block membership-expired">
 
-        <div class="membership-expired-title">Ваша клубная карта истекла 💩</div>
+        <div class="membership-expired-title">Срок вашего членства закончился</div>
 
 
         {% if features.PATREON_AUTH_ENABLED and me.membership_platform_type == "patreon" %}
@@ -23,17 +23,17 @@
         {% else %}
             <div class="membership-expired-description">
                 <p>
-                    Так случается, когда вы давно не продлевали свою подписку или на вашей карте просто не осталось денег и теперь вы нищий.
+                    (придумано ИИ, TODO заменить) Оплата в Клубе разовая и не продлевается автоматически, поэтому после окончания оплаченного срока доступ закрывается.
                 </p>
                 <p>
-                    Давайте сделаем с этим что-нибудь!
+                    Чтобы вернуться, достаточно продлить членство — это займёт пару минут.
                 </p>
             </div>
         {% endif %}
     </div>
 
 
-    <div class="block-header" id="select_package">Продлевать будем?</div>
+    <div class="block-header" id="select_package">Продлить членство</div>
 
     <br>
 
@@ -45,17 +45,17 @@
 
         <input type="hidden" name="email" value="{{ me.email }}">
 
-        <button type="submit" class="button button-big join-button">Продлить 🤙</button>
+        <button type="submit" class="button button-big join-button">Продлить</button>
 
     </form>
 
 
     <div class="block membership-expired" style="margin-top: 280px;">
-        <div class="membership-expired-title">☠️ Нафиг вас, я хочу удалиться!</div>
+        <div class="membership-expired-title">Я хочу удалить аккаунт</div>
 
         <div class="membership-expired-description">
             <p>
-                Без проблем. Напишите «{{ settings.GDPR_DELETE_CONFIRMATION }}» в поле внизу — это запустит процесс очистки и удаления вашего профиля из Клуба насовсем.
+                (придумано ИИ, TODO заменить) Это можно сделать. Напишите «{{ settings.GDPR_DELETE_CONFIRMATION }}» в поле внизу — это запустит процесс очистки и удаления вашего профиля из Клуба насовсем.
             </p>
         </div>
 

@@ -157,7 +157,7 @@ class SubscriptionNotificationTest(TestCase):
 
         body = send_email.call_args.kwargs["html"]
         self.assertNotIn("Чат А", body)
-        self.assertNotIn("Например вот из этих", body)
+        self.assertNotIn("Например, вот из этих", body)
 
     @patch(f"{COMMAND}.get_user_chats")
     @patch(f"{COMMAND}.send_telegram_message")
@@ -182,7 +182,7 @@ class SubscriptionNotificationTest(TestCase):
         call_command("send_subscription_notifications", production=True, stage="expire")
 
         body = send_email.call_args.kwargs["html"]
-        self.assertIn("Например вот из этих", body)
+        self.assertIn("Например, вот из этих", body)
         self.assertIn("Чат 0", body)
         self.assertIn("Чат 1", body)
         self.assertIn("Чат 2", body)

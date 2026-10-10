@@ -44,26 +44,26 @@ async def get_club_user(update: Update):
     user = User.objects.filter(telegram_id=update.effective_user.id).first()
     if not user:
         if update.callback_query:
-            await update.callback_query.answer(text=f"☝️ Привяжи бота к профилю")
+            await update.callback_query.answer(text=f"☝️ (придумано ИИ, TODO заменить) Привяжите бота к профилю")
         else:
             await update.message.reply_text(
-                f"😐 Привяжи <a href=\"{settings.APP_HOST}/user/me/edit/bot/\">бота</a> к профилю",
+                f"😐 (придумано ИИ, TODO заменить) Привяжите <a href=\"{settings.APP_HOST}/user/me/edit/bot/\">бота</a> к профилю",
                 parse_mode=ParseMode.HTML
             )
         return None
 
     if user.is_banned:
         if update.callback_query:
-            await update.callback_query.answer(text=f"🙈 Ты в бане, мы больше не дружим")
+            await update.callback_query.answer(text=f"🙈 (придумано ИИ, TODO заменить) Ваш аккаунт заблокирован")
         else:
-            await update.message.reply_text(f"🙈 Ты в бане, мы больше не дружим")
+            await update.message.reply_text(f"🙈 (придумано ИИ, TODO заменить) Ваш аккаунт заблокирован")
         return None
 
     if not user.is_member:
         if update.callback_query:
-            await update.callback_query.answer(text=f"😣 Твой профиль в Клубе неактивен. Плоти долор!")
+            await update.callback_query.answer(text=f"😣 (придумано ИИ, TODO заменить) Срок вашего членства в Клубе закончился. Продлите его, чтобы пользоваться ботом")
         else:
-            await update.message.reply_text(f"😣 Твой профиль в Клубе неактивен. Плоти долор!")
+            await update.message.reply_text(f"😣 (придумано ИИ, TODO заменить) Срок вашего членства в Клубе закончился. Продлите его, чтобы пользоваться ботом")
         return None
 
     return user
@@ -87,7 +87,7 @@ async def get_club_comment(update: Update) -> Optional[Comment]:
 
     comment = Comment.objects.filter(id=comment_id).first()
     if not comment:
-        await update.message.reply_text(f"🤨 Коммент '{comment_id}' был удален или куда-то делся")
+        await update.message.reply_text(f"🤨 (придумано ИИ, TODO заменить) Комментарий '{comment_id}' не найден: возможно, он был удалён")
         return None
 
     return comment
@@ -111,7 +111,7 @@ async def get_club_post(update: Update) -> Optional[Post]:
 
     post = Post.objects.filter(slug=post_id).first()
     if not post or not post.is_commentable:
-        await update.message.reply_text(f"🤨 Пост был удален, скрыт или украден, сорян")
+        await update.message.reply_text(f"🤨 (придумано ИИ, TODO заменить) Пост не найден: возможно, он был удалён или скрыт")
         return None
 
     return post

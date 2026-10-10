@@ -4,15 +4,15 @@
 
 {% block content %}
     <div class="content join">
-        <div class="join-title"><a href="{% url "index" %}">Вступить в Клуб 🎩</a></div>
+        <div class="join-title"><a href="{% url "index" %}">Вступить в Клуб</a></div>
 
         <div class="join-description">
-            Всегда рады новым членам! Напоминаем, у нас тут не любят анонимов, поэтому мы просим всех новичков заполнить профиль и честно рассказать о себе.
+            (придумано ИИ, TODO заменить) Мы рады новым участникам! В Клубе принято знакомиться, поэтому после оплаты мы просим всех новичков заполнить профиль и написать интро — рассказ о себе. Его читают модераторы, и после одобрения вы получите полный доступ.
         </div>
 
         <form action="{% url "pay" %}" method="get">
 
-        <div class="join-subtitle" id="select_package">Пакет брать будем?</div>
+        <div class="join-subtitle" id="select_package">Выберите срок членства</div>
 
         {% include "payments/blocks/packages.html" %}
 
@@ -20,11 +20,11 @@
 
         <div class="block join-email">
             <div class="join-email-form">
-                <label>Вот сюда 👉&nbsp;&nbsp;<input type="email" name="email" placeholder="your@gmail.com" required></label>
+                <label>Введите почту&nbsp;&nbsp;<input type="email" name="email" placeholder="your@gmail.com" required></label>
             </div>
         </div>
 
-        <label class="join-consent"><input type="checkbox" name="iconsent" value="true" required> &larr; я даю согласие на обработку <a href="{% url "show_post" "docs" "privacy_policy" %}" target="_blank">персональных данных</a>, соглашаюсь с <a href="{% url "show_post" "docs" "about" %}" target="_blank">правилами</a> Клуба и помню, что мне придётся написать интро и пройти модерацию</label>
+        <label class="join-consent"><input type="checkbox" name="iconsent" value="true" required> &larr; я даю согласие на обработку <a href="{% url "show_post" "docs" "privacy_policy" %}" target="_blank">персональных данных</a>, соглашаюсь с <a href="{% url "show_post" "docs" "about" %}" target="_blank">правилами</a> Клуба и помню, что мне нужно будет написать интро и пройти модерацию</label>
 
         <button type="submit" class="button button-big join-button">Перейти к оплате</button>
 

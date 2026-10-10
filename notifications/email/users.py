@@ -11,7 +11,7 @@ def send_registration_email(user: User):
     registration_template = loader.get_template("emails/registration.html")
     send_transactional_email(
         recipient=user.email,
-        subject=f"Ваша Клубная Карта 🪪",
+        subject=f"Оплата получена, добро пожаловать!",
         html=registration_template.render({"user": user}),
         tags=["registration"]
     )
@@ -21,7 +21,7 @@ def send_renewal_email(user: User):
     renewal_template = loader.get_template("emails/renewal.html")
     send_transactional_email(
         recipient=user.email,
-        subject=f"Ваша подписка стала еще длиннее!",
+        subject=f"Членство в Клубе продлено",
         html=renewal_template.render({"user": user}),
         tags=["renewal"]
     )
@@ -31,7 +31,7 @@ def send_welcome_drink(user: User):
     welcome_drink_template = loader.get_template("emails/welcome.html")
     send_transactional_email(
         recipient=user.email,
-        subject=f"Велком дринк 🍸",
+        subject=f"Добро пожаловать в Клуб!",
         html=welcome_drink_template.render({
             "user": user,
             "secret_code": generate_notification_token(user),
@@ -48,7 +48,7 @@ def send_user_rejected_email(user: User, reason: UserRejectReason):
 
     send_transactional_email(
         recipient=user.email,
-        subject=f"😕 Пока нет",
+        subject=f"Профиль пока не прошёл модерацию",
         html=rejected_template.render({"user": user}),
         tags=["rejected"]
     )
@@ -68,7 +68,7 @@ def send_unmoderated_email(user: User):
     rejected_template = loader.get_template("emails/unmoderated.html")
     send_transactional_email(
         recipient=user.email,
-        subject=f"😱 Вас размодерировали",
+        subject=f"Нужно дополнить профиль",
         html=rejected_template.render({"user": user}),
         tags=["unmoderated"]
     )
@@ -81,7 +81,7 @@ def send_banned_email(user: User, days: int, reason: str):
     banned_template = loader.get_template("emails/banned.html")
     send_transactional_email(
         recipient=user.email,
-        subject=f"💩 Вас забанили",
+        subject=f"Ваш аккаунт заблокирован",
         html=banned_template.render({
             "user": user,
             "days": days,
@@ -115,7 +115,7 @@ def send_delete_account_request_email(user: User, code: Code):
     auth_template = loader.get_template("emails/delete_account_request.html")
     send_transactional_email(
         recipient=user.email,
-        subject=f"🧨 Код для удаления аккаунта",
+        subject=f"Код для удаления аккаунта",
         html=auth_template.render({"user": user, "code": code}),
         tags=["killme"]
     )
@@ -125,7 +125,7 @@ def send_delete_account_confirm_email(user: User):
     auth_template = loader.get_template("emails/delete_account_confirm.html")
     send_transactional_email(
         recipient=user.email,
-        subject=f"✌️ Ваш аккаунт в Клубе будет удалён",
+        subject=f"Ваш аккаунт в Клубе будет удалён",
         html=auth_template.render({"user": user}),
         tags=["killme"]
     )

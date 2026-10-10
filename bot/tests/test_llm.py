@@ -202,7 +202,7 @@ class LLMResponseTest(BaseTelegramTest, TransactionTestCase):
                         self.SEND_MESSAGE_PATH,
                         {
                             "chat_id": "12345",
-                            "text": f"🙈 Я отвечаю только участникам с активной подпиской в Клубе. Продлите подписку: {settings.APP_HOST}/user/me/",
+                            "text": f"🙈 (придумано ИИ, TODO заменить) Я отвечаю только участникам с активным членством в Клубе. Продлить членство можно здесь: {settings.APP_HOST}/user/me/",
                             "link_preview_options": '{"is_disabled": true}',
                         },
                     ),
@@ -245,7 +245,7 @@ class LLMResponseTest(BaseTelegramTest, TransactionTestCase):
                         self.SEND_MESSAGE_PATH,
                         {
                             "chat_id": "12345",
-                            "text": "Чот я устал отвечать на вопросы... давай потом",
+                            "text": "(придумано ИИ, TODO заменить) Сейчас я не могу отвечать на вопросы. Попробуйте, пожалуйста, чуть позже",
                         },
                     ),
                     self.RESPONSE,
@@ -405,7 +405,7 @@ class LLMResponseTest(BaseTelegramTest, TransactionTestCase):
                         self.SEND_MESSAGE_PATH,
                         {
                             "chat_id": "12345",
-                            "text": "Что-то сломалось, попробуй ещё раз позже 🤷",
+                            "text": "(придумано ИИ, TODO заменить) Что-то пошло не так, попробуйте ещё раз позже 🤷",
                         },
                     ),
                     self.RESPONSE,

@@ -84,7 +84,7 @@ async def command_whois(update: Update, context: CallbackContext) -> None:
     if origin is not None:
         if origin.type == MessageOrigin.HIDDEN_USER:
             await update.message.reply_text(
-                f"🤨 Кажется, {origin.sender_user_name} скрыл свой профиль для пересылаемых сообщений. Попробуй дать команду в ответ на исходное сообщение",
+                f"🤨 (придумано ИИ, TODO заменить) Кажется, {origin.sender_user_name} скрыл свой профиль для пересылаемых сообщений. Попробуйте дать команду в ответ на исходное сообщение",
                 do_quote=True,
             )
             return None
@@ -99,7 +99,7 @@ async def command_whois(update: Update, context: CallbackContext) -> None:
             )
             return
         await update.message.reply_text(
-            "Это бот, глупышка",
+            "(придумано ИИ, TODO заменить) Это бот",
             do_quote=True
         )
         return None
@@ -108,7 +108,7 @@ async def command_whois(update: Update, context: CallbackContext) -> None:
     user = User.objects.filter(telegram_id=telegram_id).first()
     if not user:
         await update.message.reply_text(
-            f"🤨 Пользователь не найден в Клубе. Гоните его, насмехайтесь над ним!",
+            f"🤨 (придумано ИИ, TODO заменить) Пользователь не найден в Клубе",
             do_quote=True
         )
         return None

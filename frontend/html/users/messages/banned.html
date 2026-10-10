@@ -1,11 +1,11 @@
 {% extends "message.html" %}
 
 {% block message %}
-    <h2>Вас забанили</h2>
+    <h2>Ваш аккаунт заблокирован</h2>
 
     {% if me.is_banned_until %}
         <p>
-            Бан истечет {{ me.is_banned_until | date:"j E Y" }}
+            (придумано ИИ, TODO заменить) Блокировка истечёт {{ me.is_banned_until | date:"j E Y" }}
         </p>
     {% endif %}
 

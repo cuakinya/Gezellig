@@ -39,7 +39,7 @@ async def llm_response(update: Update, context: CallbackContext) -> None:
 
     if not user.is_active_member:
         await update.message.reply_text(
-            f"🙈 Я отвечаю только участникам с активной подпиской в Клубе. Продлите подписку: {settings.APP_HOST}/user/me/",
+            f"🙈 (придумано ИИ, TODO заменить) Я отвечаю только участникам с активным членством в Клубе. Продлить членство можно здесь: {settings.APP_HOST}/user/me/",
             link_preview_options=LinkPreviewOptions(is_disabled=True)
         )
         return None
@@ -47,7 +47,7 @@ async def llm_response(update: Update, context: CallbackContext) -> None:
     await context.bot.send_chat_action(chat_id=update.effective_chat.id, action="typing")
 
     if is_rate_limited("ai_bot"):
-        await update.message.reply_text("Чот я устал отвечать на вопросы... давай потом")
+        await update.message.reply_text("(придумано ИИ, TODO заменить) Сейчас я не могу отвечать на вопросы. Попробуйте, пожалуйста, чуть позже")
         return None
 
     user_input = [
@@ -60,7 +60,7 @@ async def llm_response(update: Update, context: CallbackContext) -> None:
     try:
         answer = await asyncio.to_thread(ask_assistant, "\n".join(user_input))
     except Exception:
-        await update.message.reply_text("Что-то сломалось, попробуй ещё раз позже 🤷")
+        await update.message.reply_text("(придумано ИИ, TODO заменить) Что-то пошло не так, попробуйте ещё раз позже 🤷")
         return None
 
     if answer:
