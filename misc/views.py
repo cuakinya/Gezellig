@@ -86,8 +86,8 @@ def crew(request):
 
 @require_auth
 def write_to_crew(request, crew):
-    if crew not in CREWS:
-        raise Http404()
+    if crew not in CREWS or not CREWS[crew].get("telegram_chat_id"):
+        raise Http404()  # для этой команды не настроен чат — писать некуда
 
     if request.method == "POST":
         reason = request.POST.get("reason")

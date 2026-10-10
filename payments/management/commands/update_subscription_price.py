@@ -26,6 +26,11 @@ class Command(BaseCommand):
         parser.add_argument("--limit", type=int, required=False)
 
     def handle(self, *args, **options):
+        # Команда работает только с подписками Stripe, которых в клубе нет (оплата разовая через ЮKassa)
+        if not settings.STRIPE_API_KEY:
+            self.stdout.write("Stripe не настроен — команда не используется")
+            return
+
         # Configuration
         old_price_id = options.get("old_price_id")
         new_price_id = options.get("new_price_id")

@@ -28,6 +28,11 @@ def list_invites(request):
     })
 
 
+def invite_membership_days(invite):
+    product = find_product_by_code(invite.payment.product_code) if invite.payment else None
+    return product["data"]["timedelta"].days if product else None
+
+
 def show_invite(request, invite_code):
     invite = get_object_or_404(Invite, code=invite_code)
 
@@ -51,6 +56,7 @@ def show_invite(request, invite_code):
         })
 
     return render(request, "invites/show.html", {
+        "invite_days": invite_membership_days(invite),
         "invite": invite
     })
 

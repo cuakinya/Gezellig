@@ -12,7 +12,7 @@ from posts.models.post import Post
 
 log = logging.getLogger(__name__)
 
-TELEGRAM_CHANNEL_ID = -1001814814883
+TELEGRAM_CHANNEL_ID = settings.TELEGRAM_BEST_COMMENTS_CHANNEL_ID  # канал «лучшие комментарии»; пусто — команда ничего не шлёт
 TIME_INTERVAL = timedelta(days=3)
 SELECT_LIMIT = 40
 MIN_UPVOTES = 30
@@ -22,6 +22,10 @@ class Command(BaseCommand):
     help = "Send best comments to the channel"
 
     def handle(self, *args, **options):
+        if not TELEGRAM_CHANNEL_ID:
+            self.stdout.write("TELEGRAM_BEST_COMMENTS_CHANNEL_ID не задан, пропускаю")
+            return
+
         best_comments = Comment.visible_objects().filter(
             created_at__gte=datetime.utcnow() - TIME_INTERVAL,
             post__moderation_status=Post.MODERATION_APPROVED,

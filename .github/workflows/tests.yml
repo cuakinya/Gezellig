@@ -78,7 +78,7 @@ jobs:
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: vas3k_club
+          POSTGRES_DB: hezellikh
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -137,7 +137,7 @@ jobs:
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: vas3k_club
+          POSTGRES_DB: hezellikh
           POSTGRES_HOST: localhost
           REDIS_DB: 0
           REDIS_HOST: localhost

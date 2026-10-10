@@ -16,6 +16,10 @@ log = logging.getLogger(__name__)
 
 
 def parse_stripe_webhook_event(request, webhook_secret, **kwargs):
+    # без секрета подпись может посчитать кто угодно (HMAC с пустым ключом), поэтому такой вебхук не принимаем
+    if not webhook_secret:
+        raise BadRequest(code=400, message="[webhook is not configured]")
+
     payload = request.body
     sig_header = request.META.get("HTTP_STRIPE_SIGNATURE")
 

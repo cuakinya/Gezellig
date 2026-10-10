@@ -5,7 +5,7 @@ import os
 import uuid
 
 from django.urls import reverse
-from django.test import TestCase
+from django.test import TestCase, override_settings
 import json
 import time
 from unittest import skip
@@ -105,6 +105,7 @@ class TestDoneView(TestCase):
 
 
 @patch('payments.views.stripe.stripe')
+@override_settings(STRIPE_API_KEY="sk_test_dummy")
 class TestPayView(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -442,6 +443,21 @@ class TestStripeWebhookView(TestCase):
         response = self.client.post(reverse("stripe_webhook"), data={"xxx": 1}, content_type='application/json')
 
         self.assertEqual(response.status_code, 400)
+
+    def test_forged_event_rejected_when_secret_not_configured(self):
+        # подпись HMAC с пустым ключом может посчитать кто угодно
+        payload = json.dumps({"id": "evt_1", "object": "event", "type": "customer.created",
+                              "data": {"object": {"id": "cus_evil", "email": self.existed_user.email}}})
+        timestamp = int(time.time())
+        signature = WebhookSignature._compute_signature(f"{timestamp}.{payload}", "")
+        header = {"HTTP_STRIPE_SIGNATURE": f"t={timestamp},v1={signature}"}
+        with self.settings(STRIPE_WEBHOOK_SECRET=""):
+            response = self.client.post(reverse("stripe_webhook"), data=payload,
+                                        content_type="application/json", **header)
+
+        self.assertEqual(response.status_code, 400)
+        self.existed_user.refresh_from_db()
+        self.assertNotEqual(self.existed_user.stripe_id, "cus_evil")
 
     def test_negative_invalid_signature(self):
         header = {'HTTP_STRIPE_SIGNATURE': 'invalid-signature'}

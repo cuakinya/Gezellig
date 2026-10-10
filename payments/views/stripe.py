@@ -2,7 +2,7 @@ import logging
 from datetime import datetime
 
 from django.conf import settings
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.shortcuts import render
 from stripe.error import InvalidRequestError
 
@@ -26,6 +26,9 @@ def done(request):
 
 
 def pay(request):
+    if not settings.STRIPE_API_KEY:
+        raise Http404()  # Stripe в клубе не используется, оплата идёт через ЮKassa
+
     product_code = request.GET.get("product_code")
     is_invite = request.GET.get("is_invite")
     is_recurrent = request.GET.get("is_recurrent")

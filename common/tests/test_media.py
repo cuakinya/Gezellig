@@ -62,6 +62,33 @@ class TestLocalMediaUpload(TestCase):
 
         self.assertEqual(response.status_code, 400)
 
+    def test_expired_member_is_rejected(self):
+        expired = User.objects.create(
+            email="expired@example.com",
+            membership_started_at=datetime.utcnow() - timedelta(days=60),
+            membership_expires_at=datetime.utcnow() - timedelta(days=1),
+            slug="expired",
+        )
+        client = HelperClient(user=expired).authorise()
+        response = client.post(reverse("upload_media"), {"media": SimpleUploadedFile("pic.png", png_bytes())})
+
+        self.assertEqual(response.status_code, 403)
+
+    def test_html_disguised_as_video_is_rejected(self):
+        client = HelperClient(user=self.member).authorise()
+        fake = SimpleUploadedFile("evil.mp4", b"<html><script>alert(1)</script></html>")
+        response = client.post(reverse("upload_media"), {"media": fake})
+
+        self.assertEqual(response.status_code, 400)
+
+    def test_mp4_is_accepted(self):
+        client = HelperClient(user=self.member).authorise()
+        mp4 = SimpleUploadedFile("clip.mp4", b"\x00\x00\x00\x18ftypmp42" + b"\x00" * 64)
+        response = client.post(reverse("upload_media"), {"media": mp4})
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.json()["uploaded"][0].endswith(".mp4"))
+
     def test_avatar_resized_and_converted_locally(self):
         url = upload_image_multipart("ava.png", io.BytesIO(png_bytes((800, 600))), resize=(192, 192), convert_to="jpg")
 

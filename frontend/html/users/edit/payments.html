@@ -11,43 +11,19 @@
         <div class="form-title">🎩<br>Клубные взносы</div>
 
         <div class="block-subheader">
-            Клубная карта активна до <strong>{{ me.membership_expires_at | date:"j E Y" }}</strong> — это <span class="badge-price">💎 {{ me.membership_days_left|floor }} {{ me.membership_days_left|rupluralize:"день,дня,дней" }}</span>
+            Членство активно до <strong>{{ me.membership_expires_at | date:"j E Y" }}</strong> — это <span class="badge-price">💎 {{ me.membership_days_left|floor }} {{ me.membership_days_left|rupluralize:"день,дня,дней" }}</span>
         </div>
 
-        {% if me.membership_platform_type == "patreon" %}
-            <div class="block pay-subscription">
-                🙂 Подключён Patreon.
-                Рекомендуем по возможности перейти на прямую оплату ниже.
-            </div>
-        {% else %}
-            {% if not subscriptions %}
-                <div class="block pay-subscription">Автопродление отключено 😟</div>
-            {% endif %}
-        {% endif %}
-
-        {% for subscription in subscriptions %}
-            <div class="block pay-subscription">
-                🔥 Включено автопополнение на <strong>€{{ subscription.amount | floatformat }}</strong> каждый
-                {% if subscription.interval == "month" %}
-                    месяц <strong>{{ subscription.next_charge_at | date:"j" }} числа</strong>
-                {% else %}
-                    год <strong>{{ subscription.next_charge_at | date:"j E" }}</strong>
-                {% endif %}
-
-                <br><br>
-
-                <a href="{% url "stop_subscription" subscription.id %}" class="button button-small" onclick="return confirm('Точно отключаем?')">Отключить</a>
-            </div>
-        {% endfor %}
 
         <div class="block-description block-description-center">
-            О любых проблемах с оплатой сразу пишите на <a href="mailto:{% club_email "payments" %}">{% club_email "payments" %}</a>.<br>
-            Мы можем исправить или откатить любую транзакцию, так что не волнуйтесь.
+            (придумано ИИ, TODO заменить) Оплата разовая, без автопродления: новые дни прибавляются к текущему сроку.<br>
+            О любых проблемах с оплатой пишите на <a href="mailto:{% club_email "payments" %}">{% club_email "payments" %}</a>.<br>
+            — разберёмся с каждым платежом.
         </div>
 
         <form action="{% url "pay" %}" method="get">
 
-        <div class="block-header" id="select_package">На сколько еще пополняем?</div>
+        <div class="block-header" id="select_package">На сколько продлеваем?</div>
 
         <br>
 
@@ -57,15 +33,11 @@
 
         </form>
 
-        <div class="block-description block-description-center">
-            Даже годовые подписки можно покупать каждый месяц — это специальная фича для диких, кто хочет еще больше поддерживать Клуб!
-        </div>
 
-        <div class="block-header" style="max-width: 600px; margin-top: 100px;">🏅<br>А чтобы было веселее, вот топ членов Клуба с самой длинной подпиской</div>
+        <div class="block-header" style="max-width: 600px; margin-top: 100px;">🏅<br>Участники с самым долгим членством</div>
 
         <div class="block-description">
-            Все собранные взносы идут на развитие Клуба, поэтому если вам хочется поддержать или отблагодарить Клуб за помощь,
-            лучший способ это сделать — продлить свою карту ещё на пару тысяч лет вперёд :D
+            (придумано ИИ, TODO заменить) Все взносы идут на работу сайта и встречи клуба. Спасибо, что вы с нами!
         </div>
     </div>
 

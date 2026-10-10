@@ -8,8 +8,12 @@ from common.media import save_image, save_video, VIDEO_EXTENSIONS
 @require_POST
 def upload_media(request):
     """Загрузка картинок и видео из редактора постов и комментариев (локальное хранилище)"""
-    if not request.me or request.me.is_banned:
+    if not request.me:
         return JsonResponse({"error": "Нужно войти в Клуб"}, status=403)
+
+    # загружать могут только участники с оплаченным членством (в том числе новички, которые пишут интро)
+    if request.me.is_banned or not request.me.is_active_membership:
+        return JsonResponse({"error": "Загрузка доступна участникам с активным членством"}, status=403)
 
     media = request.FILES.get("media")
     if not media:

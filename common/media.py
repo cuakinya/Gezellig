@@ -66,8 +66,16 @@ def save_image(data: bytes, resize=None, convert_to=None, quality=None) -> str |
     return _store(output.getvalue(), extension)
 
 
+def _looks_like_video(data: bytes, extension: str) -> bool:
+    if extension in ("mp4", "mov"):
+        return len(data) > 12 and data[4:8] in (b"ftyp", b"moov", b"wide", b"mdat", b"free")
+    if extension == "webm":
+        return data[:4] == b"\x1aE\xdf\xa3"
+    return False
+
+
 def save_video(data: bytes, filename: str) -> str | None:
     extension = filename.rsplit(".", 1)[-1].lower() if "." in filename else ""
-    if extension not in VIDEO_EXTENSIONS:
+    if extension not in VIDEO_EXTENSIONS or not _looks_like_video(data, extension):
         return None
     return _store(data, extension)
