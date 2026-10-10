@@ -16,7 +16,7 @@ class Tag(models.Model):
     GROUP_OTHER = "other"
     GROUPS = [
         (GROUP_PERSONAL, "Я"),
-        (GROUP_TECH, "Технологии"),
+        (GROUP_TECH, "Языки"),
         (GROUP_CLUB, "Для других членов Клуба я..."),
         (GROUP_HOBBIES, "Хобби"),
         (GROUP_COLLECTIBLE, "Коллекционные теги"),

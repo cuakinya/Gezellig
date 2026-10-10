@@ -200,14 +200,14 @@ PRODUCTS = {
 }
 
 # Тарифы для оплаты через ЮKassa (разовые покупки, без автопродления).
-# ЦЕНЫ — ЗАГЛУШКИ: финальные цены и набор периодов ещё не утверждены.
+# Цены утверждены 11.10.2026: 300 ₽ месяц, 700 ₽ три месяца, 2600 ₽ год.
 # Порядок в словаре = порядок карточек на странице выбора пакета.
 YOOKASSA_PRODUCTS = {
     "club1m_ru": {
         "code": "club1m_ru",
         "title": "На месяц",
         "description": "+1 месяц в Клубе",
-        "amount": "150.00",
+        "amount": "300.00",
         "recurrent": False,
         "activator": club_subscription_activator,
         "data": {
@@ -218,7 +218,7 @@ YOOKASSA_PRODUCTS = {
         "code": "club3m_ru",
         "title": "На 3 месяца",
         "description": "+3 месяца в Клубе",
-        "amount": "450.00",
+        "amount": "700.00",
         "recurrent": False,
         "activator": club_subscription_activator,
         "data": {
@@ -229,7 +229,7 @@ YOOKASSA_PRODUCTS = {
         "code": "club12m_ru",
         "title": "На год",
         "description": "+1 год в Клубе",
-        "amount": "1800.00",
+        "amount": "2600.00",
         "recurrent": False,
         "activator": club_subscription_activator,
         "data": {
@@ -238,12 +238,13 @@ YOOKASSA_PRODUCTS = {
     },
 }
 
-# Инвайт — подарочная покупка, на странице пакетов не показывается
+# Инвайт — подарочный месяц членства для друга, на странице пакетов не показывается.
+# TODO: цена и срок инвайта не утверждены (сейчас = месяц за 300 ₽)
 YOOKASSA_INVITE_PRODUCT = {
     "code": "club_invite_ru",
     "title": "Инвайт",
     "description": "Инвайт в Клуб",
-    "amount": "150.00",
+    "amount": "300.00",
     "recurrent": False,
     "activator": club_invite_activator,
     "data": {
