@@ -36,6 +36,8 @@
                         edit-profile-url="{% url "edit_profile" me.slug %}#map-location"
                         :can-post-message="{{ can_post_map_message|yesno:"true,false" }}"
                         :max-message-length="{{ max_map_message_length }}"
+                        access-token="{{ settings.MAPBOX_TOKEN }}"
+                        map-style="{{ settings.MAPBOX_STYLE }}"
                         class="people-map-container"></people-map>
         </div>
 

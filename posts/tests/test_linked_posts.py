@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 
+from django.conf import settings
 from django.test import TestCase
 
 from posts.models.linked import LinkedPost
@@ -39,7 +40,7 @@ class TestCreateLinksFromText(TestCase):
 
     def test_creates_linked_posts_from_urls(self):
         text = " ".join(
-            f"https://vas3k.club/post/{p.slug}/" for p in self.target_posts
+            f"{settings.APP_HOST}/post/{p.slug}/" for p in self.target_posts
         )
 
         LinkedPost.create_links_from_text(self.source_post, text)
@@ -58,14 +59,14 @@ class TestCreateLinksFromText(TestCase):
 
     def test_deduplicates_urls(self):
         slug = self.target_posts[0].slug
-        text = f"https://vas3k.club/post/{slug}/ and again https://vas3k.club/post/{slug}/"
+        text = f"{settings.APP_HOST}/post/{slug}/ and again {settings.APP_HOST}/post/{slug}/"
 
         LinkedPost.create_links_from_text(self.source_post, text)
 
         self.assertEqual(LinkedPost.objects.count(), 1)
 
     def test_ignores_nonexistent_slugs(self):
-        text = "https://vas3k.club/post/nonexistent_slug_xyz/"
+        text = f"{settings.APP_HOST}/post/nonexistent_slug_xyz/"
 
         LinkedPost.create_links_from_text(self.source_post, text)
 
@@ -80,7 +81,7 @@ class TestCreateLinksFromText(TestCase):
             author=self.author,
             visibility=Post.VISIBILITY_DRAFT,
         )
-        text = f"https://vas3k.club/post/{draft.slug}/"
+        text = f"{settings.APP_HOST}/post/{draft.slug}/"
 
         LinkedPost.create_links_from_text(self.source_post, text)
 

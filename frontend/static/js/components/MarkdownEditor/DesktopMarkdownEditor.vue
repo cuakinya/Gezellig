@@ -52,7 +52,7 @@ import {
 } from "../../common/markdown-editor";
 import { throttle } from "../../common/utils";
 
-const DEFAULT_AVATAR = "https://i.vas3k.club/v.png";
+const DEFAULT_AVATAR = "/static/images/avatar.png";
 
 export default {
     props: {

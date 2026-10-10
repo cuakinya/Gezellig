@@ -50,6 +50,10 @@ import mapboxgl from "mapbox-gl";
 import ClubApi from "../common/api.service";
 import { pluralize } from "../common/utils";
 
+// Токен и стиль карты задаются в настройках (MAPBOX_TOKEN, MAPBOX_STYLE) и приходят через props
+const DEFAULT_MAP_STYLE = "mapbox://styles/mapbox/streets-v12";
+const DEFAULT_AVATAR = "/static/images/avatar.png";
+
 const MESSAGES_SOURCE = "messagesGeojson";
 const MESSAGES_CLUSTER_RADIUS = 40;
 const MESSAGE_TEXT_MIN_ZOOM = 10;
@@ -87,13 +91,19 @@ export default {
             type: [Object, String],
             default: "",
         },
+        accessToken: {
+            type: String,
+            default: "",
+        },
+        mapStyle: {
+            type: String,
+            default: DEFAULT_MAP_STYLE,
+        },
     },
     data() {
         return {
-            accessToken: "pk.eyJ1IjoidmFzM2siLCJhIjoiY2thZ254NXVwMDhkbjJ5dDk5eGh5Y21wbyJ9.wYXG58PrErQfRHTflvdSfA",
-            mapStyle: "mapbox://styles/vas3k/ckagmhzm90tkd1inu8pg76p9s/draft",
             coordinates: [18.3, 51.06],
-            defaultAvatar: "https://i.vas3k.club/v.png",
+            defaultAvatar: DEFAULT_AVATAR,
             postingAllowed: this.canPostMessage,
             composeMode: false,
             draft: null,
@@ -121,6 +131,10 @@ export default {
         this.messagesSourceAdded = false;
     },
     mounted() {
+        if (!this.accessToken) {
+            this.$refs.map.innerText = "Карта не настроена: задайте MAPBOX_TOKEN в .env";
+            return;
+        }
         mapboxgl.accessToken = this.accessToken;
         this.map = new mapboxgl.Map({
             container: this.$refs.map,

@@ -12,6 +12,7 @@ os.environ.setdefault("DJANGO_ALLOW_ASYNC_UNSAFE", "true")
 import django
 django.setup()
 
+from django.conf import settings
 from django.test import TransactionTestCase
 from telegram import Update, Message, User as TgUser, Chat as TgChat
 
@@ -201,7 +202,7 @@ class LLMResponseTest(BaseTelegramTest, TransactionTestCase):
                         self.SEND_MESSAGE_PATH,
                         {
                             "chat_id": "12345",
-                            "text": "🙈 Я отвечаю только чувакам с активной подпиской в Клубе. Иди продлевай! https://vas3k.club/user/me/",
+                            "text": f"🙈 Я отвечаю только участникам с активной подпиской в Клубе. Продлите подписку: {settings.APP_HOST}/user/me/",
                             "link_preview_options": '{"is_disabled": true}',
                         },
                     ),

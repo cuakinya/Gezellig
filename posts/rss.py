@@ -1,10 +1,11 @@
+from django.conf import settings
 from django.contrib.syndication.views import Feed
 
 from posts.models.post import Post
 
 
 class NewPostsRss(Feed):
-    title = "Вастрик.Клуб: Новые посты"
+    title = f"{settings.CLUB_NAME}: Новые посты"
     link = "/posts.rss"
     description = ""
     limit = 20

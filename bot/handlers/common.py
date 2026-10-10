@@ -2,6 +2,7 @@ import logging
 from enum import Enum
 from typing import Optional
 
+from django.conf import settings
 from telegram import Update
 from telegram.constants import ParseMode
 
@@ -43,10 +44,10 @@ async def get_club_user(update: Update):
     user = User.objects.filter(telegram_id=update.effective_user.id).first()
     if not user:
         if update.callback_query:
-            await update.callback_query.answer(text=f"☝️ Привяжи бота к профилю, братишка")
+            await update.callback_query.answer(text=f"☝️ Привяжи бота к профилю")
         else:
             await update.message.reply_text(
-                f"😐 Привяжи <a href=\"https://vas3k.club/user/me/edit/bot/\">бота</a> к профилю, братишка",
+                f"😐 Привяжи <a href=\"{settings.APP_HOST}/user/me/edit/bot/\">бота</a> к профилю",
                 parse_mode=ParseMode.HTML
             )
         return None

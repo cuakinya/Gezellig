@@ -342,6 +342,9 @@ WEBHOOK_SECRETS = set(filter(None, os.getenv("WEBHOOK_SECRETS", "").split(",")))
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
+MAPBOX_TOKEN = os.getenv("MAPBOX_TOKEN") or ""  # публичный токен Mapbox для карты участников
+MAPBOX_STYLE = os.getenv("MAPBOX_STYLE") or "mapbox://styles/mapbox/streets-v12"
+
 DEFAULT_AVATAR = "/static/images/avatar.png"
 COMMENT_EDITABLE_TIMEDELTA = timedelta(hours=48)
 COMMENT_DELETABLE_TIMEDELTA = timedelta(days=10 * 365)

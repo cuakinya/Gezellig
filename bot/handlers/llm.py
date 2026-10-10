@@ -1,5 +1,6 @@
 import asyncio
 
+from django.conf import settings
 from telegram import LinkPreviewOptions, Update
 from telegram.constants import ParseMode
 from telegram.ext import CallbackContext
@@ -38,7 +39,7 @@ async def llm_response(update: Update, context: CallbackContext) -> None:
 
     if not user.is_active_member:
         await update.message.reply_text(
-            "🙈 Я отвечаю только чувакам с активной подпиской в Клубе. Иди продлевай! https://vas3k.club/user/me/",
+            f"🙈 Я отвечаю только участникам с активной подпиской в Клубе. Продлите подписку: {settings.APP_HOST}/user/me/",
             link_preview_options=LinkPreviewOptions(is_disabled=True)
         )
         return None

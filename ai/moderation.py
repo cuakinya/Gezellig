@@ -1,5 +1,6 @@
 import logging
 
+from django.conf import settings
 from openai.types.responses import Response
 
 from ai.config import OPENAI_CHAT_MODEL, CLUB_INFO_POST_SLUGS
@@ -12,6 +13,12 @@ log = logging.getLogger(__name__)
 
 MODERATION_TEMPERATURE = 0.3
 MODERATION_MAX_OUTPUT_TOKENS = 800
+
+
+def render_prompt(prompt: str) -> str:
+    # str.replace instead of str.format: the prompts may contain other curly braces
+    return prompt.replace("{club_name}", settings.CLUB_NAME)
+
 
 POST_QUALITY_PROMPT = """Ты помощник модераторов нашего коммьюнити, которое называется {club_name}.
 Твоя цель помогать модераторам оценивать качество новых постов, находить нарушения правил и давать оценку.
@@ -57,7 +64,7 @@ def ai_rate_post_quality(post: Post) -> str:
 
     response: Response = openai.responses.create(
         model=OPENAI_CHAT_MODEL,
-        instructions=POST_QUALITY_PROMPT,
+        instructions=render_prompt(POST_QUALITY_PROMPT),
         input=[
             {"role": "user", "content": "Основные правила и ценности Клуба:\n\n"
                                         + "\n\n".join(f"{p.title}.\n\n{p.text}" for p in moderation_guides)
@@ -119,7 +126,7 @@ def ai_rate_intro_quality(user: User, intro: Post) -> str:
 
     response: Response = openai.responses.create(
         model=OPENAI_CHAT_MODEL,
-        instructions=INTRO_QUALITY_PROMPT,
+        instructions=render_prompt(INTRO_QUALITY_PROMPT),
         input=[
             {"role": "user", "content": "Основные правила и ценности Клуба:\n\n"
                                         + "\n\n".join(f"{p.title}.\n\n{p.text}" for p in moderation_guides)

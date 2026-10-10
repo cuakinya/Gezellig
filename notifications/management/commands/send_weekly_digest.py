@@ -45,7 +45,8 @@ class Command(BaseCommand):
             slug=f"{year}_{week}",
             type=Post.TYPE_WEEKLY_DIGEST,
             defaults=dict(
-                author=User.objects.filter(slug="vas3k").first(),
+                author=User.objects.filter(slug=settings.MODERATOR_USERNAME).first()
+                       or User.objects.filter(roles__contains=[User.ROLE_GOD]).first(),
                 title=f"Клубный журнал. Выпуск #{issue}: {digest_title}",
                 html=digest_without_footer,
                 text=digest_without_footer,

@@ -3,6 +3,7 @@ from types import SimpleNamespace
 from unittest.mock import AsyncMock, MagicMock, patch
 from uuid import uuid4
 
+from django.conf import settings
 from django.test import SimpleTestCase
 
 from bot.handlers.common import get_club_comment, get_club_post
@@ -17,7 +18,7 @@ class TestBotCommonHelpers(SimpleTestCase):
         update = SimpleNamespace(
             message=SimpleNamespace(
                 reply_to_message=SimpleNamespace(
-                    entities=[SimpleNamespace(type="text_link", url="https://vas3k.club/post/bot-post/")],
+                    entities=[SimpleNamespace(type="text_link", url=f"{settings.APP_HOST}/post/bot-post/")],
                     caption_entities=[],
                 ),
                 reply_text=AsyncMock(),
@@ -41,7 +42,7 @@ class TestBotCommonHelpers(SimpleTestCase):
                     entities=[
                         SimpleNamespace(
                             type="text_link",
-                            url=f"https://vas3k.club/post/some-post/#comment-{missing_comment_id}",
+                            url=f"{settings.APP_HOST}/post/some-post/#comment-{missing_comment_id}",
                         )
                     ],
                     caption_entities=[],

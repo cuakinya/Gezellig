@@ -63,7 +63,7 @@
 <script>
 import { debounce } from "../common/utils";
 
-const DEFAULT_AVATAR = "https://i.vas3k.club/v.png";
+const DEFAULT_AVATAR = "/static/images/avatar.png";
 const MAX_COAUTHORS = 10;
 const MIN_PREFIX = 3;
 const MAX_PREFIX = 15;

@@ -1,8 +1,12 @@
 import re
+from urllib.parse import urlparse
 
 from django.conf import settings
 
-WELCOME_MESSAGE = """✖️ <b>Я — твой личный бот для Вастрик.Клуба</b>\n
+CLUB_HOST_RE = re.escape(urlparse(settings.APP_HOST).netloc)
+BOT_PROFILE_URL = f"{settings.APP_HOST}/user/me/edit/bot/"
+
+WELCOME_MESSAGE = f"""✖️ <b>Я — твой личный бот для клуба «{settings.CLUB_NAME}»</b>\n
 Через меня можно отвечать на комменты и посты — просто напиши ответ реплаем на сообщение и я перепостю его в Клуб.
 Так можно общаться в комментах даже не открывая сайт.\n
 Еще в меня встроен глупый AI, который умеет искать и подсказывать всякое по Клубу.\n
@@ -14,14 +18,16 @@ WELCOME_MESSAGE = """✖️ <b>Я — твой личный бот для Вас
 /auth - Привязать бота к аккаунту в Клубе
 /help - Справка"""
 
-ANONYMOUS_MESSAGE = """Привет! Мы пока не знакомы. Привяжи меня к аккаунту командой /auth с
-<a href=\"https://vas3k.club/user/me/edit/bot/\">кодом из профиля</a> через пробел"""
+ANONYMOUS_MESSAGE = f"""Привет! Мы пока не знакомы. Привяжи меня к аккаунту командой /auth с
+<a href=\"{BOT_PROFILE_URL}\">кодом из профиля</a> через пробел"""
 
-BOT_MENTION_RE = re.compile(rf"@{settings.TELEGRAM_BOT_URL.rsplit("/", 1).pop()}\b", re.IGNORECASE)
+BOT_USERNAME = settings.TELEGRAM_BOT_URL.rstrip("/").rsplit("/", 1).pop() if settings.TELEGRAM_BOT_URL else ""
+# без настроенного бота паттерн не должен ловить любое упоминание через @
+BOT_MENTION_RE = re.compile(rf"@{re.escape(BOT_USERNAME)}\b" if BOT_USERNAME else r"(?!x)x", re.IGNORECASE)
 
 MIN_COMMENT_LEN = 40
 SKIP_COMMANDS = ("/skip", "/Skip", "#skip", "#ignore")
 COMMENT_EMOJI_RE = re.compile(r"^💬.*")
 POST_EMOJI_RE = re.compile(r"^[📝🔗❓💡🏢🤜🤛🗺🗄🔥🏗🙋‍♀️].*")
-COMMENT_URL_RE = re.compile(r"https?://vas3k.club/[a-zA-Z]+/.+?/#comment-([a-fA-F0-9\-]+)")
-POST_URL_RE = re.compile(r"https?://vas3k.club/[a-zA-Z]+/(.+?)/")
+COMMENT_URL_RE = re.compile(rf"https?://{CLUB_HOST_RE}/[a-zA-Z]+/.+?/#comment-([a-fA-F0-9\-]+)")
+POST_URL_RE = re.compile(rf"https?://{CLUB_HOST_RE}/[a-zA-Z]+/(.+?)/")

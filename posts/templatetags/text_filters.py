@@ -127,18 +127,10 @@ def is_video(value):
 
 @register.filter
 def resized_image(value, arg="full"):
-    if not value or "://i.vas3k.club/" not in value:
-        return value
-
-    if is_video(value):
-        return value
-
-    if value.startswith("https://i.vas3k.club/full/"):
-        return value.replace(
-            "https://i.vas3k.club/full/", "https://i.vas3k.club/{}/".format(arg)
-        )
-    else:
-        return value
+    # Resizing relied on the image proxy of the original club (i.vas3k.club/full/ -> /<size>/).
+    # We don't have such a proxy, so the original URL is always returned.
+    # If you add your own image resizer, implement the URL rewriting here.
+    return value
 
 
 @register.filter

@@ -79,7 +79,7 @@ describe("PeopleMap.vue", () => {
 
     function mountMap(geojson) {
         wrapper = shallowMount(PeopleMap, {
-            propsData: { geojson },
+            propsData: { accessToken: "test-token", geojson },
             stubs: { default: true },
         });
         // Simulate map load: the "load" callback is registered via map.on("load", ...)
@@ -190,7 +190,7 @@ describe("PeopleMap.vue", () => {
 
             var MarkerCtor = require("mapbox-gl").default.Marker;
             var el = MarkerCtor.mock.calls[0][0].element;
-            expect(el.style.backgroundImage).toContain("v.png");
+            expect(el.style.backgroundImage).toContain("/static/images/avatar.png");
         });
     });
 
@@ -247,7 +247,7 @@ describe("PeopleMap.vue", () => {
 
             var MarkerCtor = require("mapbox-gl").default.Marker;
             var el = MarkerCtor.mock.calls[0][0].element;
-            expect(el.style.backgroundImage).toContain("v.png");
+            expect(el.style.backgroundImage).toContain("/static/images/avatar.png");
         });
 
         it("ignores features with null or 'null' avatars when selecting cluster avatar", () => {
@@ -266,7 +266,7 @@ describe("PeopleMap.vue", () => {
 
             var MarkerCtor = require("mapbox-gl").default.Marker;
             var el = MarkerCtor.mock.calls[0][0].element;
-            expect(el.style.backgroundImage).toContain("v.png");
+            expect(el.style.backgroundImage).toContain("/static/images/avatar.png");
         });
 
         it("uses map.project() linearly — once per feature + once per cluster", () => {
@@ -415,7 +415,7 @@ describe("PeopleMap.vue", () => {
 
         function mountMapWithMessages(messages) {
             wrapper = shallowMount(PeopleMap, {
-                propsData: {
+                propsData: { accessToken: "test-token",
                     geojson: makeGeojson([]),
                     messages: messages,
                     createMessageUrl: "/map/messages/create.json",
@@ -617,7 +617,7 @@ describe("PeopleMap.vue", () => {
 
             wrapper.destroy();
             wrapper = shallowMount(PeopleMap, {
-                propsData: { geojson: makeGeojson([]) },
+                propsData: { accessToken: "test-token", geojson: makeGeojson([]) },
                 stubs: { default: true },
             });
             expect(wrapper.find(".people-map-buttons a").exists()).toBe(false);
@@ -629,7 +629,7 @@ describe("PeopleMap.vue", () => {
 
             wrapper.destroy();
             wrapper = shallowMount(PeopleMap, {
-                propsData: {
+                propsData: { accessToken: "test-token",
                     geojson: makeGeojson([]),
                     createMessageUrl: "/map/messages/create.json",
                     canPostMessage: false,
@@ -803,7 +803,7 @@ describe("PeopleMap.vue", () => {
 
         function mountMapWithRooms(rooms) {
             wrapper = shallowMount(PeopleMap, {
-                propsData: {
+                propsData: { accessToken: "test-token",
                     geojson: makeGeojson([]),
                     rooms: rooms,
                 },

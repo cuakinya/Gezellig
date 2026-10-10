@@ -1,6 +1,7 @@
 import json
 import logging
 
+from django.conf import settings
 from openai.types.responses import Response, ResponseFunctionToolCall
 
 from ai.openai import openai
@@ -12,7 +13,7 @@ log = logging.getLogger(__name__)
 ASSISTANT_TEMPERATURE = 0.7
 ASSISTANT_MAX_OUTPUT_TOKENS = 1000
 
-RAG_BOT_PROMPT = """Ты чат-бот помощник для нашего коммьюнити под названием Вастрик Клуб.
+RAG_BOT_PROMPT = """Ты чат-бот помощник для нашего коммьюнити под названием {club_name}.
 Ты отвечаешь на вопросы пользователей в разных чатах, можешь искать посты, людей в коммьюнити, комментарии,
  тематические чаты, отвечать на вопросы новичков о Клубе и просто поддерживать весёлое общение на любые темы как собеседник.
 - Отвечай коротко, ровно сколько нужно и НЕ повторяйся!
@@ -22,7 +23,7 @@ RAG_BOT_PROMPT = """Ты чат-бот помощник для нашего ко
 - Возвращай полные ссылки на найденные посты, комменты, чаты и людей. Используй списки если результатов больше 2-х.
 - Суммаризируй информацию если это необходимо, но ссылки бери только правильные из JSON и не придумывай URL.
 - Выводи ответы без заключительного текста, не задавай вопросов и не предлагай помощи.
-- Не выдумывай информацию о Вастрик Клубе, его основателях или членах, которую ты не знаешь.
+- Не выдумывай информацию о клубе {club_name}, его основателях или членах, которую ты не знаешь.
 - Если в Клубе информации нет, скажи об этом, но потом всё равно предложить свой вариант ответа на основе личного опыта.
 - Всегда возвращай ответ в Markdown."""
 
@@ -34,7 +35,7 @@ def ask_assistant(user_input: str) -> str:
 
     response: Response = openai.responses.create(
         model=OPENAI_CHAT_MODEL,
-        instructions=RAG_BOT_PROMPT,
+        instructions=RAG_BOT_PROMPT.replace("{club_name}", settings.CLUB_NAME),
         input=input_messages,
         tools=TOOLS_DESCRIPTION,
         tool_choice="auto",
@@ -90,7 +91,7 @@ def ask_assistant(user_input: str) -> str:
     # один follow-up вызов со всеми результатами tool calls
     follow_up: Response = openai.responses.create(
         model=OPENAI_CHAT_MODEL,
-        instructions=RAG_BOT_PROMPT,
+        instructions=RAG_BOT_PROMPT.replace("{club_name}", settings.CLUB_NAME),
         input=input_messages,
         temperature=ASSISTANT_TEMPERATURE,
         max_output_tokens=ASSISTANT_MAX_OUTPUT_TOKENS,

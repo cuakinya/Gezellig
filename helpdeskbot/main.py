@@ -25,7 +25,7 @@ log = logging.getLogger(__name__)
 
 async def on_help_command(update: Update, context: CallbackContext) -> None:
     await update.effective_chat.send_message(
-        "🤔 <b>Я бот Вастрик Справочной.</b>\n\n"
+        f"🤔 <b>Я бот справочной клуба {settings.CLUB_NAME}.</b>\n\n"
         "Через меня задать вопрос и получить ответы от других членов коммьюнити.\n\n\n"
         "Список команд:\n\n"
         "/start - Создание и отправка вопроса\n"

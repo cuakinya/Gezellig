@@ -2,6 +2,7 @@ from datetime import timedelta, datetime
 from urllib.parse import urlencode
 
 from zoneinfo import ZoneInfo
+from django.conf import settings
 from django.db.models import Count, Prefetch, Q, Sum
 from telegram.constants import ParseMode
 from django.http import HttpRequest, HttpResponse, Http404
@@ -146,8 +147,8 @@ def network(request):
 def robots(request):
     lines = [
         "User-agent: *",
-        "Sitemap: https://vas3k.club/sitemap.xml",
-        "Host: https://vas3k.club",
+        f"Sitemap: {settings.APP_HOST}/sitemap.xml",
+        f"Host: {settings.APP_HOST}",
         "Disallow: /intro/",
         "Disallow: /user/",
         "Disallow: /people/",
@@ -184,7 +185,7 @@ def generate_ical_invite(request):
     cal.add_component(event)
 
     response = HttpResponse(cal.to_ical(), content_type="application/force-download")
-    response["Content-Disposition"] = "attachment; filename=ical_vas3k_club.ics"
+    response["Content-Disposition"] = "attachment; filename=ical_club.ics"
     return response
 
 

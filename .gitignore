@@ -56,4 +56,5 @@ db.sqlite3
 venv/
 
 gdpr/downloads/*.zip
-.history
+.historydump.rdb
+media/
