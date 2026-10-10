@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+{% load text_filters %}
+
+{% block content %}
+    <div class="message">
+        {% block message %}
+            {% if title %}
+                <h2>{{ title }}</h2>
+            {% endif %}
+
+            <p>{{ message | markdown }}</p>
+
+            {% if data %}
+                <p>
+                    <pre>{{ data | escape }}</pre>
+                </p>
+            {% endif %}
+        {% endblock %}
+    </div>
+{% endblock %}

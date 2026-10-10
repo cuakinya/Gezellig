@@ -1,0 +1,70 @@
+import logging
+import traceback
+
+import sentry_sdk
+from django.http import JsonResponse
+from django.shortcuts import render
+
+from authn.helpers import authorized_user_with_session
+from club.exceptions import ClubException, ApiException
+
+log = logging.getLogger(__name__)
+
+def me(get_response):
+    def middleware(request):
+        request.me, request.my_session = authorized_user_with_session(request)
+
+        if request.me:
+            sentry_sdk.set_user({
+                "slug": request.me.slug,
+                "full_name": request.me.full_name,
+            })
+        else:
+            sentry_sdk.set_user(None)
+
+        response = get_response(request)
+
+        return response
+
+    return middleware
+
+
+class ExceptionMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        response = self.get_response(request)
+        return response
+
+    def process_exception(self, request, exception):
+        if isinstance(exception, ApiException):
+            return JsonResponse({
+                "error": {
+                    "code": exception.code,
+                    "title": exception.title,
+                    "message": exception.message,
+                    "data": exception.data,
+                }
+            }, status=400)
+
+        if isinstance(exception, ClubException):
+            return render(request, "error.html", {
+                "code": exception.code,
+                "title": exception.title,
+                "message": exception.message,
+                "data": exception.data,
+            }, status=400)
+
+
+class CrashLoggingMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        try:
+            response = self.get_response(request)
+            return response
+        except Exception:
+            log.error(traceback.format_exc())
+            raise

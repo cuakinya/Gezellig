@@ -1,0 +1,148 @@
+name: Run tests
+
+on:
+  pull_request:
+  workflow_call:
+
+concurrency:
+  # For pull requests, cancel all currently-running jobs for this workflow
+  # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#concurrency
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        id: setup-python
+        with:
+          python-version: '3.14'
+
+      - uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
+        with:
+          enable-cache: true
+          cache-dependency-glob: "**/uv.lock"
+
+      - name: Install flake8
+        run: uv sync --frozen --only-group dev --no-install-project
+
+      - name: run flake8
+        run: |
+          # stop the build if there are Python syntax errors or undefined names
+          uv run --no-sync flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          # exit-zero treats all errors as warnings.
+          uv run --no-sync flake8 . --count --exit-zero --statistics
+
+  frontend-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ./frontend
+        run: npm ci
+
+      - name: Run frontend tests
+        working-directory: ./frontend
+        run: npm run test:ci
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: frontend-coverage
+          path: frontend/coverage/
+          retention-days: 14
+
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:14-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: vas3k_club
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+      redis:
+        image: redis:6-alpine
+        env:
+          ALLOW_EMPTY_PASSWORD: yes
+        ports:
+          - 6379:6379
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        id: setup-python
+        with:
+          python-version: '3.14'
+
+      - uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
+        with:
+          enable-cache: true
+          cache-dependency-glob: "**/uv.lock"
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '22'
+
+      - name: Cache webpack build
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        id: cache-webpack
+        with:
+          path: |
+            frontend/static/dist
+            frontend/webpack-stats.json
+          key: ${{ runner.os }}-webpack-${{ hashFiles('frontend/package*.json', 'frontend/webpack*.js', 'frontend/static/js/**', 'frontend/static/css/**') }}
+          restore-keys: |
+            ${{ runner.os }}-webpack-
+
+      - name: Webpack build
+        if: steps.cache-webpack.outputs.cache-hit != 'true'
+        working-directory: ./frontend
+        run: |
+          node -v
+          npm -v
+          npm ci
+          npm run build
+
+      - name: Install dependencies
+        run: uv sync --frozen
+
+      - name: Run tests
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: vas3k_club
+          POSTGRES_HOST: localhost
+          REDIS_DB: 0
+          REDIS_HOST: localhost
+          PYTHONUNBUFFERED: 1
+          TESTS_RUN: da
+        run: |
+          export PATH="$PWD/.venv/bin:$PATH"
+          make test-ci

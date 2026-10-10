@@ -1,0 +1,5 @@
+🎖 {{ user_badge.from_user.full_name }} подарил вам награду «{{ user_badge.badge.title }}» {% if user_badge.comment %}за комментарий к посту <b>«<a href="{{ settings.APP_HOST }}{% url "show_post" user_badge.comment.post.type user_badge.comment.post.slug %}#comment-{{ user_badge.comment.id }}">{{ user_badge.comment.post.title }}</a>»</b>.{% elif user_badge.post and user_badge.post.type != "intro" %}за пост <b>«<a href="{{ settings.APP_HOST }}{% url "show_post" user_badge.post.type user_badge.post.slug %}">{{ user_badge.post.title }}</a>»</b>.{% endif %}
+{% if user_badge.note %}
+<i>— {{ user_badge.note }}</i>
+{% endif %}
+Награда теперь будет висеть <a href="{{ settings.APP_HOST }}{% url "profile" user_badge.to_user.slug %}">в вашем профиле</a> и все будут знать какой вы сладкий пирожочек.

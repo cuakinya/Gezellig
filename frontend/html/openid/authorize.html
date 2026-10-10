@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}
+    Авторизация для {{ app.name }} — {{ block.super }}
+{% endblock %}
+
+{% block content %}
+    <div class="content">
+        <div class="block">
+            <div class="block-header">
+                <span class="block-header-big">🪪</span><br>
+                Хотите разрешить приложению «{{ app.name }}» доступ к вашему аккаунту в Клубе?
+            </div>
+
+            {% if app.description or app.website %}
+                <div class="block-description block-description-center">
+                    {% if app.description %}<p>{{ app.description }}</p>{% endif %}
+                    <p>
+                        {% if app.website %}🌍 {{ app.website | urlize }}&nbsp;&nbsp;&nbsp;{% endif %}
+                        от: 👤 <a href="{% url "profile" app.owner.slug %}">{{ app.owner.full_name }}</a>
+                    </p>
+                </div>
+            {% endif %}
+
+            <div class="block-description block-description-center">
+                <p>
+                    ✅ {{ app.name }} сможет видеть данные вашего профиля,<br> включая email
+                </p>
+
+                <p>
+                    ⛔ Но не сможет писать посты и комментарии
+                </p>
+            </div>
+
+            <br>
+
+            <div class="block-description">
+                <div class="form-row form-row-space-between">
+                    <a href="{% url "index" %}" class="button">Нет!</a>
+                    <form action="{{ request.get_full_path }}" method="post">
+                        <input type="hidden" name="confirmed" value="true">
+                        <button class="button button-blue">Да, разрешить 👍</button>
+                    </form>
+                </div>
+            </div>
+         </div>
+    </div>
+{% endblock %}

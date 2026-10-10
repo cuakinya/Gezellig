@@ -1,0 +1,6 @@
+🏷 Новый пост с тегом <b>{{ tag.name }}</b>:
+
+{% if post.emoji %}{{ post.emoji }} {% endif %}<b>{% if post.prefix %}{{ post.prefix }} {% endif %}<a href="{{ settings.APP_HOST }}{% url "show_post" post.type post.slug %}">{{ post.title }}</a> {% if post.room %} [{{ post.room.title }}]{% endif %}</b>
+{% load posts %}{% render_tg post.text 350 %}
+
+<i>Если вы больше не хотите получать уведомления по данному тегу — просто удалите его из своего профиля.</i>

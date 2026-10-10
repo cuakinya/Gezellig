@@ -1,0 +1,31 @@
+{% extends "layout_with_sidebar.html" %}
+{% load text_filters %}
+{% load static %}
+{% load paginator %}
+{% load posts %}
+
+{% block title %}
+    Комнаты — {{ block.super }}
+{% endblock %}
+
+{% block og_tags %}
+    <meta property="og:title" content="Комнаты — {{ settings.APP_NAME }}">
+    <meta property="og:site_name" content="{{ settings.APP_NAME }}">
+    <meta property="og:url" content="{{ settings.APP_HOST }}">
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="{% static "images/share.png" %}">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Комнаты — {{ settings.APP_NAME }}">
+    <meta name="twitter:image" content="{% static "images/share.png" %}">
+{% endblock %}
+
+{% block feed_content %}
+    {% for room in rooms %}
+        {% include "rooms/widgets/card.html" with room=room use_preloaded_flags=True %}
+    {% endfor %}
+
+    <div class="feed-paginator">
+        {% paginator rooms %}
+    </div>
+{% endblock %}

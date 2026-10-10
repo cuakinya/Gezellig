@@ -1,0 +1,15 @@
+<div class="block block-comments-restricted">
+    <p class="block-comments-restricted-icon">😎</p>
+
+    <p class="block-comments-restricted-message">
+        Автор поста открыл его для большого интернета, но комментирование и движухи доступны только участникам Клуба
+    </p>
+
+    <p>
+        <a href="{% url "show_post" "docs" "about" %}" target="_blank">Что вообще здесь происходит?</a>
+    </p>
+
+    <p>
+        <br><a href="{% url "login" %}?goto={{ settings.APP_HOST }}{{ request.path }}" class="button">Войти</a>&nbsp;&nbsp;или&nbsp;&nbsp;<a href="{% url "join" %}" class="button">Вступить в Клуб</a>
+    </p>
+</div>

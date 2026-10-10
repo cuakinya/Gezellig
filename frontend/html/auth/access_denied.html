@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+{% load static %}
+{% load posts %}
+
+{% block title %}
+    {% if post %}
+        {% if post.prefix %}{{ post.prefix }} {% endif %}{{ post.title }}{% if post.room %} [{{ post.room.title }}]{% endif %} — {{ block.super }}
+    {% endif %}
+{% endblock %}
+
+{% block og_tags %}
+    {% if post %}
+        {% if not post.is_public %}<meta name="robots" content="noindex, nofollow">{% endif %}
+        <meta property="og:title" content="{% if post.prefix %}{{ post.prefix }} {% endif %}{{ post.title }} — {{ settings.APP_NAME }}">
+        <meta property="og:site_name" content="{{ settings.APP_NAME }}">
+        <meta property="og:url" content="{{ settings.APP_HOST }}{% url "show_post" post.type post.slug %}">
+        <meta property="og:type" content="article" />
+        <meta property="og:description" content="{% if post.metadata.og_description %}{{ post.metadata.og_description }} {% else %}{{ post.description | truncatechars:100 }}{% endif %}">
+        <meta property="og:image" content="{% og_image post %}">
+
+        <meta name="twitter:card" content="summary">
+        <meta name="twitter:title" content="{% if post.prefix %}{{ post.prefix }} {% endif %}{{ post.title }} — {{ settings.APP_NAME }}">
+        <meta name="twitter:description" content="{% if post.metadata.og_description %}{{ post.metadata.og_description }} {% else %}{{ post.description | truncatechars:100 }}{% endif %}">
+        <meta name="twitter:image" content="{% og_image post %}">
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <div class="block access-denied">
+        <h2>Эта страница доступна только участникам Клуба 🎩</h2>
+
+        <p>
+            Иногда надо закрыть дверь, чтобы поговорить открыто.
+            Вот <a href="{% url "show_post" "docs" "about" %}">чуть подробнее</a> о том, что здесь происходит.
+        </p>
+
+        <p>
+            <br>
+            <a href="{% url "login" %}?goto={{ settings.APP_HOST }}{{ request.path }}" class="button">Войти</a>&nbsp;&nbsp;или&nbsp;&nbsp;<a href="{% url "join" %}" class="button">Вступить в Клуб</a>
+        </p>
+    </div>
+{% endblock %}

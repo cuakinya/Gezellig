@@ -1,0 +1,26 @@
+{% load text_filters %}
+<div class="block post-link post-metadata-type-link">
+    {% if embed %}
+        {{ embed | safe }}
+    {% else %}
+        <a href="{{ post.url }}" target="_blank" rel="noopener" class="post-link-a">
+            {% if post.metadata.image %}
+                <img src="{{ post.metadata.image }}" alt="{{ post.title }}" class="post-link-image">
+            {% endif %}
+
+            <span class="post-link-title">
+            {% if post.metadata.title %}
+                {{  post.metadata.title }}
+            {% elif post.metadata.description %}
+                {{  post.metadata.description }}
+            {% else %}
+                {{ post.title }}
+            {% endif %}
+            </span>
+
+            <span class="post-link-url">
+                {{ post.metadata.url|truncatechars:"80" }}
+            </span>
+        </a>
+    {% endif %}
+</div>

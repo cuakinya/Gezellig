@@ -1,0 +1,236 @@
+from datetime import datetime
+from uuid import uuid4
+
+from django.contrib.postgres.fields import ArrayField
+from django.contrib.postgres.indexes import GinIndex
+from django.contrib.postgres.search import SearchVectorField, SearchVector, SearchRank, SearchQuery
+from django.core.exceptions import MultipleObjectsReturned
+from django.db import models, IntegrityError
+from django.db.models import F, Value, FloatField
+from django.db.models.functions import Coalesce, Ln
+
+from comments.models import Comment
+from posts.models.post import Post
+from users.models.user import User
+from tags.models import UserTag
+from search.helpers import parse_search_query, parse_date_filter_bounds
+
+
+class SearchIndex(models.Model):
+    TYPE_POST = "post"
+    TYPE_COMMENT = "comment"
+    TYPE_USER = "user"
+    TYPES = [
+        (TYPE_POST, TYPE_POST),
+        (TYPE_COMMENT, TYPE_COMMENT),
+        (TYPE_USER, TYPE_USER),
+    ]
+
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+
+    type = models.CharField(max_length=32, choices=TYPES, null=True, db_index=True)
+    post = models.ForeignKey(Post, related_name="index", null=True, db_index=True, on_delete=models.SET_NULL)
+    comment = models.ForeignKey(Comment, related_name="index", null=True, db_index=True, on_delete=models.SET_NULL)
+    user = models.ForeignKey(User, related_name="index", null=True, db_index=True, on_delete=models.SET_NULL)
+
+    tags = ArrayField(models.CharField(max_length=32), null=True, db_index=True)
+    author = models.CharField(max_length=64, null=True, db_index=True)
+    upvotes = models.IntegerField(default=0, db_index=True)
+    title = models.TextField(null=True)
+
+    created_at = models.DateTimeField(db_index=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    index = SearchVectorField(null=False, editable=False)
+
+    class Meta:
+        db_table = "search_index"
+        ordering = ["-created_at"]
+        indexes = [
+            GinIndex(fields=["index"], fastupdate=False),
+        ]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["type", "post"],
+                condition=models.Q(type="post", post__isnull=False),
+                name="search_index_unique_post_per_type",
+            ),
+            models.UniqueConstraint(
+                fields=["type", "comment"],
+                condition=models.Q(type="comment", comment__isnull=False),
+                name="search_index_unique_comment_per_type",
+            ),
+            models.UniqueConstraint(
+                fields=["type", "user"],
+                condition=models.Q(type="user", user__isnull=False),
+                name="search_index_unique_user_per_type",
+            ),
+        ]
+
+    @classmethod
+    def search(cls, query):
+        parsed = parse_search_query(query)
+        normalized_query = parsed["query"]
+        has_quoted_phrase = '"' in normalized_query
+
+        result = SearchIndex.objects.all()
+
+        if parsed["author"]:
+            result = result.filter(author__iexact=parsed["author"])
+
+        if parsed["-author"]:
+            result = result.exclude(author__iexact=parsed["-author"])
+
+        if parsed["type"]:
+            result = result.filter(type=parsed["type"])
+
+        if parsed["-type"]:
+            result = result.exclude(type=parsed["-type"])
+
+        if parsed["title"]:
+            result = result.filter(title__icontains=parsed["title"])
+
+        if parsed["-title"]:
+            result = result.exclude(title__icontains=parsed["-title"])
+
+        since_bounds = parse_date_filter_bounds(parsed["since"])
+        if since_bounds:
+            result = result.filter(created_at__gte=since_bounds[0])
+
+        until_bounds = parse_date_filter_bounds(parsed["until"])
+        if until_bounds:
+            result = result.filter(created_at__lt=until_bounds[1])
+
+        if not normalized_query:
+            return result.annotate(rank=Value(1.0, output_field=FloatField()))
+
+        sq_simple = SearchQuery(normalized_query, config="simple", search_type="websearch")
+        if has_quoted_phrase:
+            return result\
+                .annotate(
+                    text_rank=SearchRank(F("index"), sq_simple),
+                    popularity_rank=Coalesce(Ln(F("upvotes") + Value(1.0)), Value(0.0)),
+                )\
+                .annotate(rank=F("text_rank") + F("popularity_rank") * Value(0.05))\
+                .filter(index=sq_simple, text_rank__gt=0)
+
+        sq_stemmed = SearchQuery(normalized_query, config="russian", search_type="websearch")
+
+        return result\
+            .annotate(
+                text_rank=SearchRank(F("index"), sq_simple) * 2 + SearchRank(F("index"), sq_stemmed),
+                popularity_rank=Coalesce(Ln(F("upvotes") + Value(1.0)), Value(0.0)),
+            )\
+            .annotate(rank=F("text_rank") + F("popularity_rank") * Value(0.05))\
+            .filter(index=sq_simple | sq_stemmed, text_rank__gt=0)
+
+    @classmethod
+    def update_comment_index(cls, comment):
+        vector = _multi_search_vector("text", weight="B") \
+                 + _multi_search_vector("author__slug", weight="C")
+
+        try:
+            SearchIndex.objects.update_or_create(
+                comment=comment,
+                type=SearchIndex.TYPE_COMMENT,
+                defaults=dict(
+                    post_id=comment.post_id,
+                    index=Comment.objects
+                    .annotate(vector=vector)
+                    .filter(id=comment.id)
+                    .values_list("vector", flat=True)
+                    .first(),
+                    created_at=comment.created_at,
+                    author=comment.author.slug if comment.author else None,
+                    upvotes=comment.upvotes,
+                    title=comment.post.title if comment.post else None,
+                    updated_at=datetime.utcnow(),
+                ),
+            )
+        except (MultipleObjectsReturned, IntegrityError):
+            pass
+
+    @classmethod
+    def update_post_index(cls, post):
+        vector = _multi_search_vector("title", weight="A") \
+                 + _multi_search_vector("text", weight="B") \
+                 + _multi_search_vector("author__slug", weight="C") \
+                 + _multi_search_vector("room__title", weight="C")
+
+        if not post.is_draft:
+            try:
+                SearchIndex.objects.update_or_create(
+                    post=post,
+                    type=SearchIndex.TYPE_POST,
+                    defaults=dict(
+                        index=Post.objects
+                        .annotate(vector=vector)
+                        .filter(id=post.id)
+                        .values_list("vector", flat=True)
+                        .first(),
+                        created_at=post.published_at or post.created_at,
+                        author=post.author.slug if post.author else None,
+                        upvotes=post.upvotes,
+                        title=post.title,
+                        updated_at=datetime.utcnow(),
+                    ),
+                )
+            except (MultipleObjectsReturned, IntegrityError):
+                pass
+        else:
+            SearchIndex.objects.filter(post=post).delete()
+
+    @classmethod
+    def update_user_index(cls, user):
+        vector = _multi_search_vector("slug", weight="A") \
+                 + _multi_search_vector("full_name", weight="A") \
+                 + _multi_search_vector("email", weight="A") \
+                 + _multi_search_vector("bio", weight="B") \
+                 + _multi_search_vector("company", weight="B") \
+                 + _multi_search_vector("country", weight="C") \
+                 + _multi_search_vector("city", weight="C") \
+                 + _multi_search_vector("contact", weight="C")
+
+        user_index = User.objects\
+            .annotate(vector=vector)\
+            .filter(id=user.id)\
+            .values_list("vector", flat=True)\
+            .first()
+
+        intro_index = Post.objects.filter(author=user, type=Post.TYPE_INTRO)\
+            .annotate(vector=_multi_search_vector("text", weight="B"))\
+            .values_list("vector", flat=True)\
+            .first()
+
+        if user.moderation_status == User.MODERATION_STATUS_APPROVED:
+            try:
+                SearchIndex.objects.update_or_create(
+                    user=user,
+                    type=SearchIndex.TYPE_USER,
+                    defaults=dict(
+                        index=(user_index or "") + " " + (intro_index or ""),
+                        created_at=user.created_at,
+                        author=user.slug,
+                        upvotes=user.upvotes,
+                        title=user.full_name,
+                        updated_at=datetime.utcnow(),
+                    ),
+                )
+            except (MultipleObjectsReturned, IntegrityError):
+                pass
+        else:
+            SearchIndex.objects.filter(user=user).delete()
+
+    @classmethod
+    def update_user_tags(cls, user):
+        if user.moderation_status == User.MODERATION_STATUS_APPROVED:
+            SearchIndex.objects.filter(user=user).update(
+                tags=list(UserTag.objects.filter(user=user).values_list("tag", flat=True))[:100],
+            )
+
+
+def _multi_search_vector(*expressions, weight=None):
+    return (
+        SearchVector(*expressions, weight=weight, config="russian") +
+        SearchVector(*expressions, weight=weight, config="simple")
+    )

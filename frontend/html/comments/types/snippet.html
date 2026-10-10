@@ -1,0 +1,44 @@
+{% load text_filters %}
+{% load comments %}
+<div class="comment comment-layout-normal {% if comment.is_pinned %}comment-is-pinned{% endif %}">
+    <div class="comment-side">
+        <a class="avatar comment-side-avatar" href="{% url "profile" comment.author.slug %}">
+            <img src="{{ comment.author.get_avatar }}" alt="Аватар {{ comment.author.full_name }}" loading="lazy" />
+        </a>
+    </div>
+    <div class="comment-header">
+        <span class="comment-header-author-and-date">
+            <span class="comment-header-author">
+                <a
+                    href="{% url "profile" comment.author.slug %}"
+                    data-author-slug="{{ comment.author.slug }}"
+                    {% if comment.author.deleted_at %}data-author-deleted="1"{% endif %}
+                    class="comment-header-author-name"
+                >
+                    {{ comment.author.full_name }}
+                </a>
+                на пост <a href="{% url "show_post" comment.post.type comment.post.slug %}#comment-{{ comment.id }}" class="comment-header-post">{{ comment.post.title }}</a>
+            </span>
+
+            <a class="comment-header-date" href="{% url "show_post" comment.post.type comment.post.slug %}#comment-{{ comment.id }}">
+                {{ comment.created_at | cool_date }}
+            </a>
+        </span>
+
+        <div class="comment-header-badges">
+            {% if comment.metadata.badges %}
+                <a class="comment-badges" href="{% url "profile_badges" comment.author.slug %}">
+                    {% include "badges/widgets/badges.html" with badges=comment.metadata.badges %}
+                </a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="comment-rating">
+        <span class="upvote upvote-disabled upvote-type-small">{{ comment.upvotes }}</span>
+    </div>
+    <div class="comment-body">
+        <div class="text-body text-body-type-comment">
+            {% render_comment comment %}
+        </div>
+    </div>
+</div>

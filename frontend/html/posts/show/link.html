@@ -1,0 +1,27 @@
+{% extends "posts/show/question.html" %}
+{% load static %}
+{% load posts %}
+{% load text_filters %}
+
+{# this type in inherited from "question" #}
+{% block post_title %}
+    {% link_icon post %}
+    &rarr;
+    <h1 class="post-inline-title">{{ post.title | rutypography }}</h1>
+{% endblock %}
+
+{% block post_text %}
+    <section class="text-body text-body-type-post e-content">
+        {% if post.metadata and post.metadata.url %}
+            {% link_summary post %}
+        {% else %}
+            <div class="block post-link post-metadata-type-link">
+                <a href="{{ post.url }}" target="_blank" rel="noopener" class="post-link-a">
+                    <span class="post-link-title">{{ post.url|truncatechars:"80" }}</span>
+                </a>
+            </div>
+        {% endif %}
+
+        {% render_post post %}
+    </section>
+{% endblock %}

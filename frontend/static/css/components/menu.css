@@ -1,0 +1,292 @@
+.menu {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-size: 120%;
+    max-width: var(--max-content-width);
+    margin: 0 auto;
+    padding-top: 25px;
+    padding-bottom: 15px;
+}
+
+    .menu-full {
+        display: flex;
+        gap: 10px;
+        flex-direction: row;
+        align-items: center;
+        flex-wrap: nowrap;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+        .menu-burger {
+            font-size: 30px;
+            line-height: 1em;
+            cursor: pointer;
+            display: block;
+            position: relative;
+            top: -1px;
+        }
+
+        .menu-logo {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 10px;
+            transition: margin-left .3s ease;
+            flex-grow: 1;
+            min-width: 210px;
+        }
+
+        @media only screen and (max-width : 1000px) {
+            .menu-full {
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+        }
+
+        .menu-right {
+            display: flex;
+            flex-grow: 1;
+            flex-direction: row;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        @media only screen and (max-width : 570px) {
+            .menu-logo {
+                min-width: auto;
+            }
+
+            .menu-full {
+                flex-wrap: wrap;
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+
+            .menu-search {
+                display: none;
+            }
+
+            .menu-right {
+                justify-content: flex-start;
+                align-items: center;
+            }
+
+            .menu-search {
+                padding: 5px 10px;
+            }
+        }
+
+    .menu-simplified {
+        grid-template-columns: auto;
+        justify-content: space-between;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+
+    @media only screen and (max-width : 1024px) {
+        .menu-simplified {
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+    }
+
+    @media only screen and (max-width : 570px) {
+        .menu-simplified {
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+    }
+
+        .menu-simplified-right {
+            display: flex;
+            justify-items: flex-end;
+            align-items: center;
+            gap: 20px;
+        }
+
+    .menu-avatar {
+        width: 40px;
+        min-width: 40px;
+        height: 40px;
+        margin-left: 10px;
+    }
+
+    .menu-search {
+        position: relative;
+        flex-grow: 4;
+        white-space: nowrap;
+    }
+
+        .menu-search-label {
+            position: absolute;
+            top: 50%;
+            margin-top: -10px;
+            left: 10px;
+            cursor: pointer;
+            font-size: 20px;
+            line-height: 20px;
+            opacity: 0.4;
+            padding-right: 15px;
+        }
+
+            .menu-search-label:hover,
+            .menu-search-label-is-active,
+            .menu-search-input:focus + label {
+                opacity: 1;
+            }
+
+        .menu-search-input {
+            width: 100%;
+            box-shadow: none !important;
+            background-color: transparent !important;
+            outline: none !important;
+            border: none !important;
+            padding: 3px 10px 4px 35px !important;
+            font-weight: 500;
+            font-size: 24px;
+            transform: none !important;
+            color: var(--text-color) !important;
+        }
+
+        .menu-search-input:focus {
+            border: var(--button-border) !important;
+            border-radius: var(--button-border-radius) !important;
+        }
+
+        .menu-search-input::placeholder {
+            visibility: hidden;
+        }
+
+
+        @media only screen and (max-width : 570px) {
+            .menu-right {
+                display: none;
+                order: 4;
+                padding: 20px 0 0 20px;
+            }
+
+                .mobile-menu-opened .menu-right {
+                    display: flex;
+                }
+
+            .menu-search-input {
+                font-size: 20px;
+            }
+
+            .menu-search-input::placeholder {
+                visibility: visible;
+            }
+        }
+
+.menu-button {
+    cursor: pointer;
+    font-size: 80%;
+    padding: 10px 18px;
+}
+
+    .menu-button-compose {
+        margin-right: 10px;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        gap: 8px;
+        align-items: center;
+        padding: 13px 20px;
+    }
+
+    .menu-button-search {
+        font-size: 20px;
+        padding: 5px 20px 2px 10px;
+        opacity: 0.5;
+        display: none;
+    }
+
+    .menu-button-bookmark,
+    .menu-button-godmode {
+        font-size: 110%;
+        opacity: 0.5;
+        text-decoration: none;
+        vertical-align: middle;
+    }
+
+        .menu-button-bookmark:hover,
+        .menu-button-godmode:hover {
+            opacity: 1.0;
+        }
+
+    @media only screen and (max-width : 570px) {
+        .menu-button {
+            display: none;
+        }
+    }
+
+    .mobile-menu-opened .menu-button {
+        display: block;
+    }
+
+.logo {
+        font-size: 26px;
+        font-weight: 700;
+        text-decoration: none;
+        white-space: nowrap;
+    }
+
+        @media only screen and (max-width : 570px) {
+            .logo {
+                font-size: 22px;
+            }
+        }
+
+        .logo:hover {
+            color: var(--text-color);
+        }
+
+        .logo img {
+            width: 1em;
+            height: 1em;
+            vertical-align: middle;
+            margin: 0 8px;
+            position: relative;
+            top: -2px;
+        }
+
+            html[theme="dark"] .logo img {
+                filter: invert();
+            }
+
+            @media (prefers-color-scheme: dark) {
+                html:not([theme]) .logo img {
+                    filter: invert();
+                }
+            }
+
+
+@media only screen and (max-width : 700px) {
+    .menu-full {
+        flex-wrap: wrap;
+    }
+
+    .menu-button-search {
+        display: block;
+    }
+
+    .menu-search {
+        display: none;
+        width: 100%;
+        order: 5;
+    }
+
+        .menu-search-label {
+            left: 20px;
+        }
+
+        .mobile-search-opened .menu-search {
+            order: 3;
+            display: block;
+            width: 100%;
+            display: block;
+        }
+}

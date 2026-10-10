@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <div class="login">
+        {% if restore %}
+            <div class="block block-description block-description-center">
+                ⚠️ <strong>Аккаунт будет восстановлен.</strong>
+                Вы недавно запросили удаление всех своих данных, но если вы войдёте сейчас в аккаунт — всё вернётся как было.
+            </div>
+        {% endif %}
+
+        <div class="block login-code">
+            <div class="login-code-title">🤘 Вам отправлен код!</div>
+
+            <div class="login-code-description">Введите секретный код доступа к Клубу, который упал вам на почту или в бота</div>
+
+            <div class="login-code-form">
+                <form action="{% url "email_login_code" %}" method="get">
+                    <input type="text" name="code" placeholder="A1B2C3" class="login-code-input" autocomplete="off" autocapitalize="characters" spellcheck="false" autofocus>
+                    <input type="hidden" name="email" value="{{ email }}">
+                    {% if goto %}<input type="hidden" name="goto" value="{{ goto }}">{% endif %}
+
+                    <button type="submit" class="button login-code-button">Войти</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

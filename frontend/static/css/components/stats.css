@@ -1,0 +1,292 @@
+.stats,
+.crew {
+    padding-top: 40px;
+    margin: 0 auto;
+    max-width: var(--max-content-width);
+}
+
+    .stats-title {
+        display: block;
+        font-size: 300%;
+        text-align: center;
+        font-weight: 500;
+        padding-top: 50px;
+        padding-bottom: 30px;
+        text-decoration: none;
+    }
+
+    .stats-header {
+        display: block;
+        font-size: 250%;
+        text-align: center;
+        font-weight: 500;
+        padding-top: 80px;
+        padding-bottom: 30px;
+        text-decoration: none;
+        max-width: var(--post-width);
+        margin: 0 auto;
+    }
+
+    .stats-subheader {
+        display: block;
+        font-size: 180%;
+        text-align: center;
+        font-weight: 500;
+        padding-top: 60px;
+        padding-bottom: 50px;
+        text-decoration: none;
+        max-width: var(--post-width);
+        margin: 0 auto;
+    }
+
+    .stats-description {
+        display: block;
+        font-size: 130%;
+        text-align: center;
+        padding-bottom: 30px;
+        max-width: var(--post-width);
+        margin: 0 auto;
+    }
+
+.stats-top-users {
+    max-width: var(--max-content-width);
+    margin: 0 auto 50px;
+}
+
+.top-users {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    align-content: center;
+    align-items: flex-start;
+    padding-bottom: 50px;
+}
+
+    .top-users-big {
+        font-size: 120%;
+    }
+
+        .top-users-big > * {
+            max-width: 160px;
+        }
+
+    .top-users-medium {
+        font-size: 105%;
+        gap: 30px;
+    }
+
+        .top-users-medium > * {
+            max-width: 100px;
+        }
+
+    .top-users-small {
+        gap: 10px;
+    }
+
+        .top-users-small > * {
+            max-width: 60px;
+        }
+
+.stats-achievements {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: center;
+    padding-bottom: 50px;
+}
+
+    .stats-achievement {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        align-items: center;
+        max-width: 220px;
+        padding-bottom: 30px;
+    }
+
+        .stats-achievement-badge {
+            width: 200px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .stats-achievement-users {
+            display: flex;
+            flex-direction: row;
+            gap: 5px;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            padding: 0;
+        }
+
+            .stats-achievement-users .user {
+                max-width: 28px;
+                max-height: 28px;
+            }
+
+        .stats-achievements-count {
+            font-size: 110%;
+            font-weight: 500;
+            opacity: 0.8;
+            text-decoration: none;
+            padding-top: 10px;
+        }
+
+.stats-achievement-details {
+    width: 100%;
+    display: block;
+}
+
+    .stats-achievement-details .user-achievement {
+        width: 250px;
+        height: 350px;
+        font-size: 180%;
+    }
+
+    .stats-achievement-details .user-badge-image {
+        max-height: 180px;
+    }
+
+    .stats-achievement-details .user-achievement-name {
+        display: none;
+    }
+
+.stats-achievement-header {
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    padding: 26px;
+}
+
+    .stats-achievement-header::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+        background:
+            radial-gradient(900px circle at 15% 25%, rgba(120, 255, 240, 0.18), transparent 60%),
+            linear-gradient(135deg, rgba(120, 255, 240, 0.10), rgba(255, 0, 200, 0.10), rgba(0, 0, 0, 0.72));
+    }
+
+    .stats-achievement-details__header-inner {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 30px;
+    }
+
+    .stats-achievement-details__card {
+        flex: 0 0 auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .stats-achievement-details__info {
+        max-width: 60%;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        justify-content: center;
+        color: #FFF;
+        text-align: left;
+    }
+
+    .stats-achievement-details__title {
+        margin: 0;
+        color: #FFF;
+        font-size: 230%;
+        font-weight: 700;
+        line-height: 1.05;
+    }
+
+    .stats-achievement-details__description {
+        margin: 0;
+        color: #FFF;
+        opacity: 0.95;
+        font-size: 135%;
+        line-height: 1.35;
+    }
+
+    .stats-achievement-details__count {
+        color: #FFF;
+        opacity: 0.95;
+        font-size: 125%;
+    }
+
+    @media only screen and (max-width : 800px) {
+        .stats-achievement-details__header-inner {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .stats-achievement-details__info {
+            max-width: 100%;
+            align-items: center;
+            text-align: center;
+        }
+
+        .stats-achievement-details__description {
+            max-width: 90%;
+        }
+    }
+
+.stats-achievement-users-list {
+    margin-top: 30px;
+}
+
+.stats-badges-latest {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 30px;
+}
+
+    .stats-badge {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        max-width: 100px;
+        text-align: center;
+        gap: 3px;
+        text-decoration: none;
+    }
+
+        .stats-badge-image {
+            width: 80px;
+            height: 80px;
+        }
+
+            .stats-badge-image-tiny {
+                width: 25px;
+                height: 25px;
+            }
+
+        .stats-badge-title {
+            font-size: 120%;
+            font-weight: 500;
+        }
+
+        .stats-badge-info {
+            font-size: 80%;
+        }
+
+.stats-badges-top {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    max-width: var(--max-content-width);
+}

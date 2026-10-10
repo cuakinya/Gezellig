@@ -1,0 +1,90 @@
+{% extends "layout.html" %}
+{% load static %}
+{% load query_params %}
+{% load paginator %}
+{% load text_filters %}
+
+{% block title %}
+    «{{ query }}» — {{ block.super }}
+{% endblock %}
+
+{% block og_tags %}
+    <meta property="og:title" content="«{{ query }}» — {{ settings.APP_NAME }}">
+    <meta property="og:site_name" content="{{ settings.APP_NAME }}">
+    <meta property="og:url" content="{{ settings.APP_HOST }}">
+    <meta property="og:type" content="website" />
+    <meta property="og:description" content="Результаты поиска">
+    <meta property="og:image" content="{% static "images/share.png" %}">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="«{{ query }}» — {{ settings.APP_NAME }}">
+    <meta name="twitter:description" content="Результаты поиска">
+    <meta name="twitter:image" content="{% static "images/share.png" %}">
+{% endblock %}
+
+{% block content %}
+    <div class="search">
+        <div class="search-filters">
+            <form action="{% url "search" %}">
+                <div class="search-query show-on-iphone">
+                    <input type="text" name="q" minlength="3" maxlength="200" value="{{ query }}" enterkeyhint="search" placeholder="Поиск..." class="search-query-input">
+                </div>
+                {% if type %}
+                    <input type="hidden" name="type" value="{{ type }}">
+                {% endif %}
+
+                <div class="search-filters-types">
+                    <a href="{% append_query_param type="all" %}" class="search-filters-type {% if not type %}search-filters-type-selected{% endif %}">
+                        Везде
+                    </a>
+                    <a href="{% append_query_param type="post" %}" class="search-filters-type {% if type == "post" %}search-filters-type-selected{% endif %}">
+                        Посты
+                    </a>
+                    <a href="{% append_query_param type="comment" %}" class="search-filters-type {% if type == "comment" %}search-filters-type-selected{% endif %}">
+                        Комменты
+                    </a>
+                    <a href="{% append_query_param type="user" %}" class="search-filters-type {% if type == "user" %}search-filters-type-selected{% endif %}">
+                        Люди
+                    </a>
+
+                    <div class="search-filters-ordering">
+                        <select name="ordering" onchange="this.form.submit()">
+                            <option value="-rank" {% if ordering == "-rank" %}selected{% endif %}>по релевантности</option>
+                            <option value="-upvotes" {% if ordering == "-upvotes" %}selected{% endif %}>по популярности</option>
+                            <option value="-created_at" {% if ordering == "-created_at" %}selected{% endif %}>по свежести</option>
+                            <option value="created_at" {% if ordering == "created_at" %}selected{% endif %}>по старости</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="search-filters-help">
+                    👓 <b>"Как какать"</b> — поиск по точному совпадению, <b>-выгорание</b> — исключить слово, <b>author:vas3k</b> — по нику автора, <b>title:борщ</b> — в заголовке поста, <b>since:2024</b> и <b>until:2024-03-09</b> — по дате, а еще <b>AND и OR</b>, если нужны.
+                </div>
+            </form>
+        </div>
+        <div class="search-results">
+            {% if results %}
+                {% for result in results %}
+                    {% if result.type == "post" and result.post %}
+                        {% include "posts/items/items.html" with post=result.post upvote_disabled=True %}
+                    {% endif %}
+                    {% if result.type == "comment" and result.comment %}
+                        {% include "comments/types/snippet.html" with comment=result.comment %}
+                    {% endif %}
+                    {% if result.type == "user" and result.user %}
+                        {% include "users/widgets/card.html" with user=result.user %}
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <div class="search-results-placeholder">
+                    По запросу «{{ query }}» ничего не найдено...<br>
+                    <small>но и мы тут не Яндекс :(</small>
+                </div>
+            {% endif %}
+
+            <div class="feed-paginator">
+                {% paginator results %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

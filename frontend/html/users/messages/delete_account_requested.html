@@ -1,0 +1,20 @@
+{% extends "message.html" %}
+
+{% block message %}
+    <h2>☠️ Вы запросили удаление аккаунта</h2>
+
+    <p>
+        Сейчас вам на почту упадёт код подтверждения, который нужно ввести ниже чтобы начать процедуру удаление аккаунта.
+    </p>
+
+    <div class="block login-code">
+        <div class="login-code-form">
+            <form action="{% url "confirm_delete_account" %}" method="post">
+                {% csrf_token %}
+                <input type="text" name="code" placeholder="A1B2C3D4E5F6G7" class="login-code-input" autocomplete="off" autocapitalize="characters" spellcheck="false" autofocus>
+                <input type="hidden" name="secret_hash" value="{{ user.secret_hash }}">
+                <button type="submit" class="button login-code-button">Удалиться</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

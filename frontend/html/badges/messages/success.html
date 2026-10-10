@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+{% load static %}
+{% load text_filters %}
+
+{% block content %}
+    <div class="message message-center">
+        <h1>🥇 УРА!</h1>
+
+        <p style="font-size: 120%;">
+            Вы подарили награду <strong>«{{ user_badge.badge.title }}»</strong>
+            юзеру <strong><a href="{% url "profile" user_badge.to_user.slug %}">{{ user_badge.to_user.full_name }}</a></strong>
+            {% if user_badge.comment %}
+                за комментарий к посту <strong><a href="{% url "show_post" user_badge.comment.post.type user_badge.comment.post.slug %}#comment-{{ user_badge.comment.id }}">{{ user_badge.comment.post.title }}</a></strong>.
+            {% elif user_badge.post.type != "intro" %}
+                за пост <strong><a href="{% url "show_post" user_badge.post.type user_badge.post.slug %}">{{ user_badge.post.title }}</a></strong>.
+            {% endif %}
+
+            Отныне она будет украшать {% if user_badge.comment %}его комментарий{% else %}сам пост{% endif %} и профиль.
+        </p>
+
+        {% if show_funds_warning %}
+            <p style="font-weight: 500; font-size: 140%; margin: 50px 30px 0;">
+                🚨 Кстати, у вас {{ membership_days_remaining|rupluralize:"остался,осталось,осталось" }}
+                всего {{ membership_days_remaining|floor }} {{ membership_days_remaining|rupluralize:"день,дня,дней" }} членства.
+                Не забудьте <a href="{% url "edit_payments" me.slug %}">пополнить их</a>, чтобы не потерять аккаунт в Клубе.
+            </p>
+
+            <p>
+                <a class="button" href="{% url "edit_payments" me.slug %}">♥️ Пополнить баланс</a>
+            </p>
+        {% endif %}
+
+        <p>&nbsp;</p>
+
+        <p>
+            <a href="{% url "profile_badges" user_badge.to_user.slug %}">
+                <img
+                    src="{% static "images/badges" %}/big/{{ user_badge.badge.code }}.png"
+                    alt="{{ user_badge.badge.title }}"
+                    style="max-width: 200px; width: 90%;">
+            </a>
+        </p>
+
+        {% include "users/widgets/card.html" with user=user_badge.to_user %}
+    </div>
+{% endblock %}

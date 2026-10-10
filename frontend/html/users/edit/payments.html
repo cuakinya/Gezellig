@@ -1,0 +1,117 @@
+{% extends "layout.html" %}
+{% load static %}
+{% load text_filters %}
+
+{% block title %}
+    Клубные взносы — {{ block.super }}
+{% endblock %}
+
+{% block content %}
+    <div class="content user-edit">
+        <div class="form-title">🎩<br>Клубные взносы</div>
+
+        <div class="block-subheader">
+            Клубная карта активна до <strong>{{ me.membership_expires_at | date:"j E Y" }}</strong> — это <span class="badge-price">💎 {{ me.membership_days_left|floor }} {{ me.membership_days_left|rupluralize:"день,дня,дней" }}</span>
+        </div>
+
+        {% if me.membership_platform_type == "patreon" %}
+            <div class="block pay-subscription">
+                🙂 Подключён <a href="https://www.patreon.com/vas3k" target="_blank">Patreon</a>.
+                Рекомендуем по возможности перейти на прямую оплату ниже.
+            </div>
+        {% else %}
+            {% if not subscriptions %}
+                <div class="block pay-subscription">Автопродление отключено 😟</div>
+            {% endif %}
+        {% endif %}
+
+        {% for subscription in subscriptions %}
+            <div class="block pay-subscription">
+                🔥 Включено автопополнение на <strong>€{{ subscription.amount | floatformat }}</strong> каждый
+                {% if subscription.interval == "month" %}
+                    месяц <strong>{{ subscription.next_charge_at | date:"j" }} числа</strong>
+                {% else %}
+                    год <strong>{{ subscription.next_charge_at | date:"j E" }}</strong>
+                {% endif %}
+
+                <br><br>
+
+                <a href="{% url "stop_subscription" subscription.id %}" class="button button-small" onclick="return confirm('Точно отключаем?')">Отключить</a>
+            </div>
+        {% endfor %}
+
+        {% if me.membership_platform_type == "direct" %}
+            <div class="block-description block-description-center">
+                Для обновления данных карточки, просмотра или отмены активных подписок можно еще использовать <a href="{{ settings.STRIPE_CUSTOMER_PORTAL_URL }}" target="_blank">Stripe Customer Portal</a> (email тот же что в Клубе).
+            </div>
+        {% endif %}
+
+        <div class="block-description block-description-center">
+            О любых проблемах с оплатой сразу пишите на <a href="mailto:monies@vas3k.club">monies@vas3k.club</a>.<br>
+            Мы можем исправить или откатить любую транзакцию, так что не волнуйтесь.
+        </div>
+
+        <form action="{% url "pay" %}" method="get">
+
+        <div class="block-header" id="select_package">На сколько еще пополняем?</div>
+
+        <br>
+
+        {% include "payments/blocks/packages.html" %}
+
+        <button type="submit" class="button button-big join-button">Продлить членство 🤙</button>
+
+        </form>
+
+        <br><br>
+
+        <div class="block-description block-description-center">
+            Пополняйте когда вам удобно — новые дни будут просто суммироваться.
+        </div>
+
+        <div class="block-description block-description-center">
+            Даже годовые подписки можно покупать каждый месяц — это специальная фича для диких, кто хочет еще больше поддерживать Клуб!
+        </div>
+
+        <div class="block-header" style="max-width: 600px; margin-top: 100px;">🏅<br>А чтобы было веселее, вот топ членов Клуба с самой длинной подпиской</div>
+
+        <div class="block-description">
+            Все собранные взносы идут на развитие Клуба, поэтому если вам хочется поддержать или отблагодарить Клуб за помощь,
+            лучший способ это сделать — продлить свою карту ещё на пару тысяч лет вперёд :D
+        </div>
+    </div>
+
+    <div class="block stats-top-users">
+        <div class="top-users top-users-big">
+            {% for user in top_users|slice:"0:5" %}
+                <a class="user user-round zoom-on-hover" href="{% url "profile" user.slug %}">
+                    <span class="user-round-avatar-badge">🏆</span>
+                    <span class="avatar user-round-avatar">
+                        <img src="{{ user.get_avatar }}" alt="Аватар {{ user.full_name }}" loading="lazy" />
+                    </span>
+                    <span class="user-round-name">#{{ forloop.counter }}: {{ user.full_name }}</span>
+                    <span class="user-round-info">до {{ user.membership_expires_at | date:"E Y" }} года</span>
+                </a>
+            {% endfor %}
+        </div>
+
+        <div class="top-users top-users-medium">
+            {% for user in top_users|slice:"5:25" %}
+                <a class="user user-round zoom-on-hover" href="{% url "profile" user.slug %}">
+                    <span class="avatar user-round-avatar">
+                        <img src="{{ user.get_avatar }}" alt="Аватар {{ user.full_name }}" loading="lazy" />
+                    </span>
+                    <span class="user-round-name">#{{ forloop.counter|add:5 }}: {{ user.full_name }}</span>
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="content user-edit" id="invite">
+        <div class="block-header">💌<br>Пригласить друга</div>
+
+        <div class="block-description block-description-center">
+            <a href="{% url "invites" %}" class="button">🎁 Инвайты переехали сюда</a>
+        </div>
+    </div>
+{% endblock %}

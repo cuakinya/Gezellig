@@ -1,0 +1,73 @@
+{% extends "layout.html" %}
+{% load static %}
+{% load comments %}
+{% load posts %}
+{% load text_filters %}
+{% load paginator %}
+
+{% block title %}
+    Награды юзера {{ user.full_name }} — {{ block.super }}
+{% endblock %}
+
+{% block content %}
+    <div class="content profile">
+        {% include "users/widgets/card.html" with user=user %}
+
+        <div class="profile-header">
+            {{ badges.paginator.count }} {{ badges.paginator.count|rupluralize:"награда,награды,наград" }}
+        </div>
+
+        <div class="profile-list">
+            {% if badges %}
+                {% for user_badge in badges %}
+                    <div class="block profile-badge">
+                        <div class="profile-badge-side">
+                            <img
+                                src="{% static "images/badges" %}/big/{{ user_badge.badge.code }}.png"
+                                alt="{{ user_badge.badge.title }}"
+                                class="badge-image profile-badge-image">
+                        </div>
+
+                        <div class="profile-badge-main">
+                            <div class="profile-badge-title">
+                                <strong>«{{ user_badge.badge.title }}»</strong>
+
+                                {% if user_badge.comment %}
+                                    за комментарий к посту <strong><a href="{% url "show_post" user_badge.comment.post.type user_badge.comment.post.slug %}#comment-{{ user_badge.comment.id }}">{{ user_badge.comment.post.title }}</a></strong>.
+                                {% elif user_badge.post %}
+                                    {% if user_badge.post.type != "intro" %}
+                                        за пост <strong><a href="{% url "show_post" user_badge.post.type user_badge.post.slug %}">{{ user_badge.post.title }}</a></strong>
+                                    {% endif %}
+                                {% else %}
+                                    за контент, который был удалён
+                                {% endif %}
+                            </div>
+
+                            <div class="profile-badge-body">
+                                {% if user_badge.note %}
+                                    <span class="profile-badge-note">
+                                        — {{ user_badge.note }}
+                                    </span>
+                                {% endif %}
+
+                                <span class="profile-badge-from">
+                                    {{ user_badge.created_at|date:"j E Y" }}
+                                    &nbsp;·&nbsp;
+                                    {% include "users/widgets/tiny.html" with user=user_badge.from_user show_name=True %}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="profile-list-placeholder">
+                    🥺 У пользователя пока нет наград...
+                </div>
+            {% endif %}
+
+            <div class="feed-paginator">
+                {% paginator badges %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

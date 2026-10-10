@@ -1,0 +1,46 @@
+{% if not form.instance.is_safely_deletable_by_author %}
+    <div class="form-row form-row-space-between">
+        <div class="block form-warning">
+            💬 В посте уже набралось больше {{ settings.MAX_COMMENTS_FOR_DELETE_VS_CLEAR }} комментариев.
+            Из уважения к их авторам, кнопка удаления поста превратилась в очистку и анонимизацию.
+        </div>
+    </div>
+{% endif %}
+
+<div class="form-row form-row-space-between">
+    {% if form.instance.visibility == "draft" %}
+        <div>
+            <button type="submit" class="button button-inverted">
+                Сохранить черновик
+            </button>
+
+            {% if form.instance.slug %}
+                <a href="{% url 'delete_post' form.instance.slug %}" class="button button-inverted"><i class="fas fa-trash"></i></a>
+            {% endif %}
+        </div>
+
+        {% if form.instance.slug %}
+            <button type="submit" name="action" value="publish" class="button button-blue" onclick="return confirm('Публикуем? Пост увидят все и он попадет на модерацию')">
+                Опубликовать 🚀
+            </button>
+        {% else %}
+            <button type="submit" name="action" value="preview" class="button">
+                Предпросмотр 👀
+            </button>
+        {% endif %}
+    {% else %}
+        {% if form.instance.is_safely_deletable_by_author or request.me.is_moderator %}
+            <a href="{% url "unpublish_post" form.instance.slug %}" class="button button-red">
+                Удалить пост
+            </a>
+        {% endif %}
+
+        {% if not form.instance.is_safely_deletable_by_author or request.me.is_moderator %}
+            <a href="{% url "clear_post" form.instance.slug %}" class="button button-red">
+                Очистить пост
+            </a>
+        {% endif %}
+
+        <button type="submit" class="button button-blue"><i class="fa fa-save"></i>&nbsp;&nbsp;Сохранить изменения</button>
+    {% endif %}
+</div>

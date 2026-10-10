@@ -1,0 +1,45 @@
+{% load static %}
+{% load text_filters %}
+
+<div class="badge-generator">
+    <div class="block">
+        <form action="." method="get">
+            <span class="form-row">
+                <textarea name="users">{{ requested_users }}</textarea>
+            </span>
+
+            <span class="form-row">
+                <label><input type="checkbox" name="hide_bio" value="1" {% if hide_bio %}checked{% endif %}> Спрятать био</label>
+            </span>
+
+            <span class="form-row">
+                <label><input type="checkbox" name="hide_badges" value="1" {% if hide_badges %}checked{% endif %}> Спрятать бейджики</label>
+            </span>
+
+            <span class="form-row">
+                <label><input type="checkbox" name="hide_stats" value="1" {% if hide_stats %}checked{% endif %}> Спрятать стаж</label>
+            </span>
+
+            <span class="form-row">
+                <label>Повторить каждый бейджик N раз <input type="label" name="repeat" value="{{ repeat|default:1 }}"></label>
+            </span>
+
+            <span class="form-row">
+                <input type="submit" value="Генерировать">
+            </span>
+        </form>
+    </div>
+
+    <div class="badge-generator-results">
+        <table class="badge-generator-table">
+            <tr>
+                {% for user in users %}
+                    <td>
+                        {% include "users/badge.html" %}
+                    </td>
+                    {% if forloop.counter|divisibleby:2 %}</tr><tr>{% endif %}
+                {% endfor %}
+            </tr>
+        </table>
+    </div>
+</div>

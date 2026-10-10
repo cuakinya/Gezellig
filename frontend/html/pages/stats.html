@@ -1,0 +1,163 @@
+{% extends "layout.html" %}
+{% load static %}
+{% load users %}
+{% load text_filters %}
+
+{% block title %}
+    Статистика — {{ block.super }}
+{% endblock %}
+
+{% block og_tags %}
+    <meta property="og:title" content="Доска Почёта — {{ settings.APP_NAME }}">
+    <meta property="og:site_name" content="{{ settings.APP_NAME }}">
+    <meta property="og:url" content="{{ settings.APP_HOST }}">
+    <meta property="og:type" content="website" />
+    <meta property="og:description" content="">
+    <meta property="og:image" content="{% static "images/share.png" %}">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Доска Почёта — {{ settings.APP_NAME }}">
+    <meta name="twitter:description" content="">
+    <meta name="twitter:image" content="{% static "images/share.png" %}">
+{% endblock %}
+
+
+{% block content %}
+    <div class="stats">
+        <div class="stats-title">🏆<br>Доска Почёта</div>
+
+        <div class="stats-description">
+            Тут можно посмотреть выданные ачивки, награды, миллионеров Клуба и прочих достойных людей.
+        </div>
+
+        <div class="stats-header">💎 Миллионеры Клуба</div>
+
+        <div class="stats-description">
+            Члены Клуба с самой длинной подпиской.
+            Они помогают Клубу развиваться и оставаться независимым, потому им респект и обнимашки.<br>
+            Продлить свою можно <strong><a href="{% url "edit_payments" me.slug %}">здесь</a></strong>.
+        </div>
+
+        <div class="block stats-top-users">
+            <div class="top-users top-users-big">
+                {% for user in top_users|slice:"0:5" %}
+                    <a class="user user-round zoom-on-hover" href="{% url "profile" user.slug %}">
+                        <span class="user-round-avatar-badge">🏆</span>
+                        <span class="avatar user-round-avatar">
+                            <img src="{{ user.get_avatar }}" alt="Аватар {{ user.full_name }}" loading="lazy" />
+                        </span>
+                        <span class="user-round-name">#{{ forloop.counter }}: {{ user.full_name }}</span>
+                        <span class="user-round-info">до {{ user.membership_expires_at | date:"E Y" }} года</span>
+                    </a>
+                {% endfor %}
+            </div>
+
+            <div class="top-users top-users-medium">
+                {% for user in top_users|slice:"5:19" %}
+                    <a class="user user-round zoom-on-hover" href="{% url "profile" user.slug %}">
+                        <span class="avatar user-round-avatar">
+                            <img src="{{ user.get_avatar }}" alt="Аватар {{ user.full_name }}" loading="lazy" />
+                        </span>
+                        <span class="user-round-name">#{{ forloop.counter|add:5 }}: {{ user.full_name }}</span>
+                        <span class="user-round-info">{{ user.membership_expires_at | date:"F Y" | lower }}</span>
+                    </a>
+                {% endfor %}
+            </div>
+
+            <div class="top-users top-users-small">
+                {% for user in top_users|slice:"19:58" %}
+                    {% include "users/widgets/round.html" with user=user show_name=False %}
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="stats-header">🥇 Награды</div>
+
+        <div class="stats-description">
+            Награды дарят члены Клуба другим членам Клуба.
+            Они стоят денег, потому каждая награда подчёркивает особый вклад по мнению коммьюнити.
+            Вот топ самых награждаемых юзеров за последние месяцы 👇
+        </div>
+
+        <div class="block stats-badges-top">
+            <div class="top-users top-users-big">
+                {% for user in top_badges|slice:":5" %}
+                    <a class="user user-round zoom-on-hover" href="{% url "profile_badges" user.slug %}">
+                        <span class="user-round-avatar-badge">🎖</span>
+                        <span class="avatar user-round-avatar">
+                            <img src="{{ user.get_avatar }}" alt="{{ user.full_name }}" loading="lazy" />
+                        </span>
+                        <span class="user-round-name">#{{ forloop.counter }}: {{ user.full_name }}</span>
+                        <span class="user-round-info">
+                            {% for badge in user.to_badges.all|slice:":5" %}
+                                <img
+                                    src="{% static "images/badges" %}/big/{{ badge.badge.code }}.png"
+                                    alt="{{ badge.badge.title }}"
+                                    class="stats-badge-image-tiny">
+                            {% endfor %}
+                        </span>
+                    </a>
+                {% endfor %}
+            </div>
+            <div class="top-users top-users-medium">
+                {% for user in top_badges|slice:"5:12" %}
+                    <a class="user user-round zoom-on-hover" href="{% url "profile_badges" user.slug %}">
+                        <span class="avatar user-round-avatar">
+                            <img src="{{ user.get_avatar }}" alt="{{ user.full_name }}" loading="lazy" />
+                        </span>
+                        <span class="user-round-name">#{{ forloop.counter|add:5 }}: {{ user.full_name }}</span>
+                        <span class="user-round-info">
+                            {% for badge in user.to_badges.all|slice:":3" %}
+                                <img
+                                    src="{% static "images/badges" %}/big/{{ badge.badge.code }}.png"
+                                    alt="{{ badge.badge.title }}"
+                                    class="stats-badge-image-tiny">
+                            {% endfor %}
+                        </span>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="stats-subheader">
+            Последние выданные награды 👇
+        </div>
+
+        <div class="stats-badges-latest">
+            {% for badge in latest_badges %}
+                <a href="{% url "profile_badges" badge.to_user.slug %}" class="stats-badge zoom-on-hover">
+                    <img
+                        src="{% static "images/badges" %}/big/{{ badge.badge.code }}.png"
+                        alt="{{ badge.badge.title }}"
+                        class="stats-badge-image">
+                    <span class="stats-badge-title">{{ badge.badge.title}}</span>
+                    <span class="stats-badge-info">🎖 {{ badge.to_user.full_name }}</span>
+                </a>
+            {% endfor %}
+        </div>
+
+        <div class="stats-header">🏆 Ачивки</div>
+
+        <div class="stats-achievements">
+            {% for achievement in achievements %}
+                <div class="stats-achievement">
+                    <div class="stats-achievement-badge">
+                        {% include "achievements/widgets/achievement.html" %}
+                    </div>
+                    <div class="stats-achievement-users">
+                        {% for user in achievement.achievement_users|slice:":5" %}
+                            {% include "users/widgets/round.html" with user=user show_name=False %}
+                        {% endfor %}
+                    </div>
+                    <a class="stats-achievements-count" href="{% url "show_achievement" achievement.code %}">{{ achievement.user_count }} {{ achievement.user_count|rupluralize:"человек,человека,человек" }}</a>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="stats-description">
+            <a href="{% url "write_to_crew" "parliament" %}?reason=achievement" class="button">Подать заявку на ачивку</a>
+
+            <p>Для оффлайн-ачивок потребуется фото-подтверждение.</p>
+        </div>
+    </div>
+{% endblock %}
