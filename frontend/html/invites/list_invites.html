@@ -19,9 +19,9 @@
 
             <form action="{% url "pay" %}" method="get">
                 {% csrf_token %}
-                <input type="hidden" name="product_code" value="club1_invite">
-                <input type="hidden" name="is_invite" value="true">
-                <button type="submit" class="button">🎁 Купить инвайт-код</button>
+                {% load packages %}{% club_invite_package as invite_package %}
+                <input type="hidden" name="product_code" value="{{ invite_package.code }}">
+                <button type="submit" class="button">🎁 Купить инвайт-код за {{ invite_package.price }}&nbsp;₽</button>
             </form>
 
             {% if me.is_god %}

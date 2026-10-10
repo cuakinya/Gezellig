@@ -127,7 +127,7 @@ class TestPayView(TestCase):
         mocked_stripe.checkout.Session.create.return_value = session
 
         # when
-        response = self.client.get(reverse("pay"),
+        response = self.client.get(reverse("stripe_pay"),
                                    data={
                                        "product_code": product_code,
                                        # "is_recurrent": PRODUCTS[product_code]["recurrent"],
@@ -156,7 +156,7 @@ class TestPayView(TestCase):
         self.client.authorise()
 
         # when
-        response = self.client.get(reverse("pay"),
+        response = self.client.get(reverse("stripe_pay"),
                                    data={
                                        "product_code": product_code,
                                    })
@@ -179,7 +179,7 @@ class TestPayView(TestCase):
         broken_email = f"email-invalid"
 
         # when
-        response = self.client.get(reverse("pay"),
+        response = self.client.get(reverse("stripe_pay"),
                                    data={
                                        "product_code": product_code,
                                        "email": broken_email
@@ -193,7 +193,7 @@ class TestPayView(TestCase):
         product_code = "unexisted-product-code"
 
         # when
-        response = self.client.get(reverse("pay"),
+        response = self.client.get(reverse("stripe_pay"),
                                    data={
                                        "product_code": product_code,
                                    })

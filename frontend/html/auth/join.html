@@ -8,8 +8,6 @@
 
         <div class="join-description">
             Всегда рады новым членам! Напоминаем, у нас тут не любят анонимов, поэтому мы просим всех новичков заполнить профиль и честно рассказать о себе.
-            <br><br>
-            Если вам не подходят наши <a href="{% url "show_post" "docs" "about" %}" target="_blank">правила</a>, вы боитесь деанона или пришли «просто почитать посты» рекомендуем сэкономить нам всем время и пойти на <a href="https://ok.ru/" rel="nofollow">Одноклассники</a>, там как-то с этим попроще.
         </div>
 
         <form action="{% url "pay" %}" method="get">
@@ -31,10 +29,5 @@
         <button type="submit" class="button button-big join-button">Перейти к оплате</button>
 
         </form>
-
-        <div class="block pay-warning" style="margin-top: 100px;">
-            ⚠️ Платежи из <strong>России и некоторых банков Беларуси</strong> больше не проходят из-за санкций.
-            Альтернативные опции оплаты ищите <strong><a href="{% url "show_post" "docs" "blocked_dolor" %}">в нашем гайде</a></strong>.
-        </div>
     </div>
 {% endblock %}

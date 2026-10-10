@@ -40,12 +40,6 @@
             </div>
         {% endfor %}
 
-        {% if me.membership_platform_type == "direct" %}
-            <div class="block-description block-description-center">
-                Для обновления данных карточки, просмотра или отмены активных подписок можно еще использовать <a href="{{ settings.STRIPE_CUSTOMER_PORTAL_URL }}" target="_blank">Stripe Customer Portal</a> (email тот же что в Клубе).
-            </div>
-        {% endif %}
-
         <div class="block-description block-description-center">
             О любых проблемах с оплатой сразу пишите на <a href="mailto:{% club_email "payments" %}">{% club_email "payments" %}</a>.<br>
             Мы можем исправить или откатить любую транзакцию, так что не волнуйтесь.
@@ -62,12 +56,6 @@
         <button type="submit" class="button button-big join-button">Продлить членство 🤙</button>
 
         </form>
-
-        <br><br>
-
-        <div class="block-description block-description-center">
-            Пополняйте когда вам удобно — новые дни будут просто суммироваться.
-        </div>
 
         <div class="block-description block-description-center">
             Даже годовые подписки можно покупать каждый месяц — это специальная фича для диких, кто хочет еще больше поддерживать Клуб!

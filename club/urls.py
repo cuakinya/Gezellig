@@ -25,7 +25,7 @@ from godmode.views.main import godmode, godmode_list_model, godmode_edit_model, 
 from misc.fun import mass_note
 from misc.views import stats, network, robots, generate_ical_invite, generate_google_invite, show_achievement, \
     crew, write_to_crew
-from payments.views.yookassa import yookassa_webhook, rubles
+from payments.views.yookassa import yookassa_webhook, pay
 from rooms.views import redirect_to_room_chat, list_rooms, toggle_room_subscription, toggle_room_mute
 from notifications.views import render_weekly_digest, email_unsubscribe, email_confirm, email_digest_switch, \
     link_telegram
@@ -33,7 +33,7 @@ from notifications.webhooks import webhook_event
 from payments.views.common import membership_expired
 from payments.api import api_gift_days
 from invites.api import api_gift_invite_link
-from payments.views.stripe import pay, done, stripe_webhook, stop_subscription
+from payments.views.stripe import pay as stripe_pay, done, stripe_webhook, stop_subscription
 from posts.api import md_show_post, api_show_post, json_feed
 from posts.models.post import Post
 from posts.rss import NewPostsRss
@@ -92,8 +92,9 @@ urlpatterns = [
     path("auth/openid/revoke", openid_revoke_token, name="openid_revoke_token"),
 
     path("monies/", pay, name="pay"),
+    path("monies/stripe/", stripe_pay, name="stripe_pay"),  # Stripe отключён в интерфейсе, код оставлен
     path("monies/done/", done, name="done"),
-    path("rubles/", rubles, name="rubles"),
+    path("rubles/", RedirectView.as_view(pattern_name="pay", query_string=True), name="rubles"),
     path("monies/membership_expired/", membership_expired, name="membership_expired"),
     path("monies/subscription/<str:subscription_id>/stop/", stop_subscription, name="stop_subscription"),
     path("monies/stripe/webhook/", stripe_webhook, name="stripe_webhook"),

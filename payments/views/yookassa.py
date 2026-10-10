@@ -4,14 +4,15 @@ from datetime import datetime
 
 from django.conf import settings
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.urls import reverse
 from yookassa import Configuration, Payment as YookassaPayment
 
 from club.exceptions import BadRequest
 from payments.exceptions import PaymentException
 from payments.helpers import parse_yookassa_webhook_event
 from payments.models import Payment
-from payments.products import YOOKASSA_PRODUCTS
+from payments.products import find_yookassa_product, YOOKASSA_DEFAULT_PRODUCT_CODE, YOOKASSA_INVITE_PRODUCT
 from users.models.user import User
 
 log = logging.getLogger()
@@ -20,16 +21,37 @@ Configuration.account_id = settings.YOOKASSA_SHOP_ID
 Configuration.secret_key = settings.YOOKASSA_API_KEY
 
 
-def rubles(request):
+def pay(request):
+    """Разовая покупка периода членства (или инвайта) через ЮKassa: создаём платёж и уводим на страницу оплаты"""
+    if not settings.YOOKASSA_SHOP_ID or not settings.YOOKASSA_API_KEY:
+        return render(request, "error.html", {
+            "title": "Оплата ещё не настроена",
+            "message": "Укажите YOOKASSA_SHOP_ID и YOOKASSA_API_KEY в настройках (для начала — ключи тестового магазина)."
+        })
+
+    product_code = request.GET.get("product_code") or YOOKASSA_DEFAULT_PRODUCT_CODE
+    product = find_yookassa_product(product_code)
+    if not product:
+        return render(request, "error.html", {
+            "title": "Не выбран пакет 😣",
+            "message": "Выберите, на какой срок вы хотите вступить или продлить членство"
+        })
+
+    is_invite = product["code"] == YOOKASSA_INVITE_PRODUCT["code"]
     now = datetime.utcnow()
 
-    if not request.me:  # scenario 1: new user
-        # parse email
-        email = request.GET.get("email") or ""
-        if email:
-            email = email.lower().strip()
+    if request.me:  # продление или покупка инвайта
+        user = request.me
+    else:  # новый участник
+        if is_invite:
+            return redirect("login")
+
+        email = (request.GET.get("email") or "").lower().strip()
         if not email or "@" not in email:
-            return render(request, "payments/rubles.html", {})
+            return render(request, "error.html", {
+                "title": "Плохой e-mail адрес 😣",
+                "message": "Нам ведь нужно будет как-то привязать аккаунт к платежу"
+            })
 
         user, _ = User.objects.get_or_create(
             email=email,
@@ -43,10 +65,6 @@ def rubles(request):
                 moderation_status=User.MODERATION_STATUS_INTRO,
             ),
         )
-    else:  # scenario 2: account renewal or invite purchase
-        user = request.me
-
-    product = YOOKASSA_PRODUCTS["club1_ru"]  # hardcoded for now
 
     session = YookassaPayment.create({
         "amount": {
@@ -55,7 +73,7 @@ def rubles(request):
         },
         "confirmation": {
             "type": "redirect",
-            "return_url": settings.APP_HOST + "/user/me/"
+            "return_url": settings.APP_HOST + (reverse("invites") if is_invite else "/user/me/")
         },
         "capture": True,
         "description": f"{product['description']} для {user.email}",
@@ -77,25 +95,21 @@ def rubles(request):
                         "currency": "RUB"
                     },
                     "payment_mode": "full_payment",
-                    "payment_subject": "payment",
+                    "payment_subject": "service",
                     "vat_code": 1,
                 },
             ]
         }
     }, uuid.uuid4())
 
-    payment = Payment.create(
+    Payment.create(
         reference=session.id,
         user=user,
         product=product,
         data=session.json(),
     )
 
-    return render(request, "payments/rubles.html", {
-        "user": user,
-        "payment": payment,
-        "session": session,
-    })
+    return redirect(session.confirmation.confirmation_url)
 
 
 def yookassa_webhook(request):
@@ -135,7 +149,7 @@ def yookassa_webhook(request):
             return HttpResponse("[invalid metadata]", status=400)
 
         # Проверяем что продукт существует в нашем каталоге
-        product = YOOKASSA_PRODUCTS.get(product_code)
+        product = find_yookassa_product(product_code)
         if not product:
             log.warning(
                 f"Неизвестный код продукта в платеже "

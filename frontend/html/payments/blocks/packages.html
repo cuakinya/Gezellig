@@ -1,35 +1,17 @@
+{% load packages %}
+{% club_packages as packages %}
 <div class="pay-packages">
-    <div>
-        <input type="radio" id="package-year" name="product_code" value="club1" checked>
-        <label for="package-year" class="block pay-package">
-            <div class="pay-package-name">На год</div>
-            <div class="pay-package-image">🤘</div>
-            <div class="pay-package-price">€25 <small>+ VAT</small></div>
-        </label>
-    </div>
-
-    <div>
-        <input type="radio" id="package-three" name="product_code" value="club3">
-        <label for="package-three" class="block pay-package">
-            <div class="pay-package-name">На 3 года</div>
-            <div class="pay-package-image">😎</div>
-            <div class="pay-package-price">€70 <small>+ VAT</small></div>
-        </label>
-    </div>
-
-    <div>
-        <input type="radio" id="package-hundred" name="product_code" value="club50">
-        <label for="package-hundred" class="block pay-package">
-            <div class="pay-package-name">На 50 лет</div>
-            <div class="pay-package-image">🚀</div>
-            <div class="pay-package-price">€350 <small>+ VAT</small></div>
-        </label>
-    </div>
+    {% for package in packages %}
+        <div>
+            <input type="radio" id="package-{{ package.code }}" name="product_code" value="{{ package.code }}"{% if package.is_default %} checked{% endif %}>
+            <label for="package-{{ package.code }}" class="block pay-package">
+                <div class="pay-package-name">{{ package.title }}</div>
+                <div class="pay-package-price">{{ package.price }}&nbsp;₽</div>
+            </label>
+        </div>
+    {% endfor %}
 </div>
 
-<div class="pay-recurrent">
-    <label class="block pay-recurrent-block">
-        <input type="checkbox" name="is_recurrent" value="true" checked>
-        повторять каждый год
-    </label>
+<div class="block-description block-description-center">
+    Разовая оплата через ЮKassa, без автопродления. Новые дни прибавляются к текущему сроку.
 </div>
