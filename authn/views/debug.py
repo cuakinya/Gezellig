@@ -20,8 +20,7 @@ def debug_dev_login(request):
     user, is_created = User.objects.get_or_create(
         slug="dev",
         defaults=dict(
-            patreon_id="123456",
-            membership_platform_type=User.MEMBERSHIP_PLATFORM_PATREON,
+            membership_platform_type=User.MEMBERSHIP_PLATFORM_DIRECT,
             email="dev@dev.dev",
             full_name="Senior 23 y.o. Developer",
             company="FAANG",

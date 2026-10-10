@@ -99,6 +99,9 @@ def openid_well_known_configuration(request):
 
 @api(require_auth=False)
 def openid_well_known_jwks(request):
+    if not settings.JWT_PUBLIC_KEY:
+        return {"keys": []}  # OpenID не настроен: нет JWT_PUBLIC_KEY
+
     openid_jwk = RSAKey.import_key(settings.JWT_PUBLIC_KEY)
     return {
         "keys": [

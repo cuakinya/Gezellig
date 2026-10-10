@@ -1,154 +1,102 @@
-<div align="center">
-  <br>
-  <img src="frontend/static/images/logo/logo-256.png" alt="">
-  <h1>vas3k.club</h1>
-</div>
+# Хезеллих
 
-Welcome to the [vas3k.club](https://vas3k.club) codebase. We're building our own little IT-lifestyle community. We've opensourced the code so that every member could contribute or implement a feature that they want.
+Платформа клуба для полиглотов. Работает на движке [vas3k.club](https://github.com/vas3k/vas3k.club) (лицензия MIT) — копия движка на коммите `8305ac0` от 1 октября 2026, отвязанная от инфраструктуры Вастрик.Клуба.
 
-[vas3k.club](https://vas3k.club) is a platform with private and paid memberships that has emerged around the [vas3k.blog](https://vas3k.blog) blog and satellite chat rooms. It's not a typical IT community with tutorials and framework reviews, but rather more of a lifestyle one. We are trying to build a peaceful and useful ecosystem, which the Internet has lost a long ago. Therefore, we carefully select and filter new members and do not seek wild growth.
+Стек: Django, PostgreSQL, Redis, Vue-компоненты внутри Django-шаблонов, Webpack, uv.
 
-Our values: honesty, fair share, respect for other members, rationality, friendliness and usefulness. We have a zero-tolerance policy on anonymity, insults and toxicity. But we always try to stay in touch with reality, so we're also not tolerant of witch hunting and call-out culture.
+## Запуск на своём компьютере
 
-We're a bullshitless community!
-
-## 🛠 Tech stack
-
-👨‍💻 **TL;DR: Django, Postgres, Redis, Vue.js, Webpack, UV**
-
-We try to keep our stack as simple and stupid as possible. Because we're not very smart either.
-
-The trickiest part of our stack is how we develop the frontend and backend as a single service. We don't use SPA, as many people do, but only make parts of the page dynamic by inserting Vue.js components directly into Django templates. This may seem weird, but it actually makes it very easy for one person to develop and maintain the entire site.
-
-You don't really need to understand how the magic of webpack <-> django communication works under the hood to develop new components. Just run `django runserver` and `npm run watch` at the same time and enjoy your coding.
-
-Feel free to propose "state of the art" refactorings for UI or backend code if you know how to do it better. We're open for best practices from both worlds.
-
-## 🔮 Running locally
-
-The happy path is Docker. Install [Docker](https://www.docker.com/get-started), then:
+### Через Docker (проще всего)
 
 ```sh
-git clone https://github.com/vas3k/vas3k.club.git
-cd vas3k.club
+cp .env.example .env
 docker compose up
 ```
 
-This starts the app in development mode on [http://127.0.0.1:8000/](http://127.0.0.1:8000/), plus Postgres, Redis, the queue workers and Webpack.
+Сайт откроется на http://127.0.0.1:8000.
 
-### Dev login
+### Без Docker
 
-First time you need a test account:
-
-- [/godmode/dev_login/](http://127.0.0.1:8000/godmode/dev_login/) — creates an admin (`god`) account and logs you in
-- [/godmode/random_login/](http://127.0.0.1:8000/godmode/random_login/) — creates a fresh random member
-
-These endpoints only work when `DEBUG=true` (which is the default in `docker compose`).
-
-Backend and frontend hot-reload on every code change. If everything is broken (it happens), rebuild from scratch:
+Нужны Python 3.13+, [uv](https://docs.astral.sh/uv/), Node 22+, PostgreSQL и Redis.
 
 ```sh
-docker compose up --build
+cp .env.example .env                 # проверить POSTGRES_* и REDIS_HOST
+createdb hezellikh
+uv sync
+npm ci --prefix frontend && npm run build --prefix frontend
+uv run python manage.py migrate
+uv run python manage.py update_tags
+uv run python manage.py runserver    # сайт
+uv run python manage.py qcluster     # очередь задач (письма, уведомления) — в отдельном окне
 ```
 
-## 🧑‍💻 Advanced setup
+### Войти
 
-Want to run without Docker, wire up the Telegram bot, or import public posts into a local DB? See [docs/setup.md](docs/setup.md).
+В режиме `DEBUG=true` работают служебные входы:
 
-Useful `make` targets once you have [uv](https://docs.astral.sh/uv/) and Node 22+ locally:
+- http://127.0.0.1:8000/godmode/dev_login/ — администратор (роль god) с оплаченным членством;
+- http://127.0.0.1:8000/godmode/random_login/ — случайный новый участник.
 
-```sh
-make run-dev          # Django on :8000
-make run-queue        # django-q workers
-make build-frontend   # one-shot webpack build
-make migrate
-make test             # backend
-make test-frontend    # Jest
-make test-all
-```
+Админка — `/godmode/`.
 
-## ☄️ Testing
+## Что настраивается и где
 
-Backend: Django's test runner. Frontend: Jest. No magic.
-
-```sh
-make test          # needs Postgres + Redis (easiest: docker compose up -d postgres redis)
-make test-frontend # needs Node only
-```
-
-More details: [docs/test.md](docs/test.md).
-
-## 🚢 Deployment
-
-No k8s, no AWS, we ship dockers directly via SSH and it's beautiful!
-
-Production config lives in [docker-compose.production.yml](docker-compose.production.yml). [GitHub Actions](.github/workflows/deploy.yml) build, test and deploy on every merge to `master` (maintainers only).
-
-Explore the [.github](.github) folder for more insights.
-
-We're open for proposals on how to improve deployments without overcomplicating it with modern devops bullshit.
-
-## 🛤 Forking and tweaking
-
-Forks are welcome. We're small and our engine is not universal like Wordpress, but with sufficient programming skills (and using grep), you can launch your own Club website in a couple of weeks.
-
-Three huge requests for everyone:
-
-- Please give kudos to the original authors. "Works on vas3k.club engine" in the footer of your site will be enough.
-- Please share new features you implement with us, so other folks can also benefit from them, and your own codebase minimally diverges from the original one (so you can sync updates and security fixes). Use our [feature-flags](club/features.py).
-- Do not use our "issues" and chats as a support desk for your own fork.
-
-> ♥️ [Feature-flags](club/features.py) are great. Use them to tweak your fork. Create new flags to upstream your new features or disable existing ones.
-
-Practical checklists for running a fork: [docs/install_checklist.md](docs/install_checklist.md) and [docs/tech_guide.md](docs/tech_guide.md).
-
-## 🙋‍♂️ How to report a bug or propose a feature?
-
-- Open [a new issue](https://github.com/vas3k/vas3k.club/issues/new) using one of the existing templates.
-- Please **use the search function** to make sure you aren't creating a duplicate.
-- Provide ALL the details, screenshots, logs, etc. Bug reports without steps to reproduce will be closed.
-
-## 😍 Contributions
-
-Important information for everyone willing to contribute to this project.
-
-- AI-generated PRs are NOT welcome.
-- Low-effort PRs are NOT welcome.
-- No cowboy PRs without prior discussion AND approval from maintainers.
-- 1 PR = 1 feature. No PRs with bulk changes.
-- Any PR longer than 10 lines of code must include a detailed text explanation of all changes.
-
-**A good way to contribute bug fixes:** search the Issues to make sure the bug hasn't been reported yet. Open a new Issue with a detailed description and steps to reproduce. Open a PR with the fix (if you can), then the contributors will either merge your PR or you'll carry on the discussion in the comments.
-
-**For new features:** open a new Issue describing the new feature you're interested in. Wait for the contributors to get back to you and give you the green light for implementation. If the contributors don't reply, it means the feature isn't of interest at the moment. ONLY after that should you open a PR for that feature.
-
-The main point of interaction is the [Issues page](https://github.com/vas3k/vas3k.club/issues) and our [Dev-chat in Telegram](https://t.me/vas3k_club_dev). DO NOT DISCUSS FORKS THERE.
-
-If you want to contribute but don't know where to start — come to the chat and just ask!
-
-> The official development language at the moment is Russian, because 100% of our users speak it. We don't want to introduce unnecessary barriers for them. But we are used to writing commits and comments in English and we won't mind communicating with you in it.
-
-## 🔐 Security and vulnerabilities
-
-If you think you've found a critical vulnerability that should not be exposed to the public yet, you can always email me directly on Telegram [@vas3k](https://t.me/vas3k) or by email: [me@vas3k.ru](mailto:me@vas3k.ru).
-
-Please do not test vulnerabilities in public. If you start spamming the website with "test-test-test" posts or comments, our moderators will ban you even if you had good intentions.
-
-## 📚 Docs
-
-| Doc | What |
+| Что | Где |
 | --- | --- |
-| [docs/setup.md](docs/setup.md) | Local setup without Docker, bots, sample data |
-| [docs/test.md](docs/test.md) | How to run tests |
-| [docs/tech_guide.md](docs/tech_guide.md) | Day-to-day club ops (rooms, tags, roles, dumps) |
-| [docs/install_checklist.md](docs/install_checklist.md) | Checklist for launching a fork |
+| Название клуба, контактные адреса | `.env`: `CLUB_NAME`, `CLUB_*_EMAIL` |
+| Заголовок и описание сайта | godmode → настройки (`app_name`, `app_title`, `app_description`) |
+| Тарифы и цены | `payments/products.py` → `YOOKASSA_PRODUCTS` |
+| Оплата | `.env`: `YOOKASSA_SHOP_ID`, `YOOKASSA_API_KEY` |
+| Почта | `.env`: `EMAIL_*`, `DEFAULT_FROM_EMAIL` |
+| Telegram-бот и каналы | `.env`: `TELEGRAM_*` |
+| Карта участников | `.env`: `MAPBOX_TOKEN`, `MAPBOX_STYLE` |
+| Включение/выключение функций | `club/features.py` |
+| Тексты «О Клубе», ценности, политика, контакты | посты типа «Доки» (`/docs/about/` и т.д.), правятся на сайте |
+| Ачивки | `common/data/achievements.py` (сейчас пусто), затем `manage.py update_achievements` |
+| Логотип и фавиконки | `frontend/static/images/logo/`, `frontend/static/images/favicon/` |
 
-## 👩‍💼 License
+В шаблонах название и адреса берутся тегами `{% club_name %}`, `{% club_url %}`, `{% club_email %}` — они работают везде без `{% load %}`, в том числе в письмах.
 
-[MIT](LICENSE)
+## Оплата
 
-You can use the code for your own private or commercial purposes with an author attribution (by including the original license file and mentioning vas3k.club somewhere on your website 🎩).
+Только ЮKassa, разовые покупки периодов «месяц / 3 месяца / год» без автопродления: новые дни прибавляются к текущему сроку. Инвайт для друга покупается там же.
 
-Feel free to contact us via email [club@vas3k.club](mailto:club@vas3k.club).
+- Без ключей ЮKassa страница оплаты показывает «Оплата ещё не настроена».
+- Для проверки без договора: зарегистрироваться в ЮKassa, создать тестовый магазин, вписать его `shopId` и секретный ключ в `.env`. Тестовая карта: `4111 1111 1111 1111`, срок — любая будущая дата, CVC — любой.
+- Webhook для подтверждения оплаты: `https://ваш-домен/monies/yookassa/webhook/` (событие `payment.succeeded`). Локально ЮKassa до него не достучится — нужен публичный адрес.
+- Код Stripe из движка оставлен, но из интерфейса убран (`/monies/stripe/`).
 
-❤️
+## Картинки
+
+Загрузки из редактора (`POST /upload/`) и аватары сохраняются на этом же сервере в `media/`. Картинки пересохраняются (это убирает EXIF с геолокацией) и уменьшаются до 2560 px. Локально их раздаёт Django, на сервере — nginx (пример в `etc/nginx/club.conf`).
+
+## Что осталось заглушкой
+
+- Логотип, фавиконки и картинка для соцсетей — временный знак «Х» (сгенерирован `utils/generate_placeholder_logos.py`).
+- Тексты лендинга, «О Клубе», ценностей, политики ПДн — черновики.
+- Цены в `payments/products.py`.
+- Домен и адреса почты (`club@example.com`).
+- Telegram-бот, каналы, карта, OpenID (`JWT_*`) — выключены, пока не заданы ключи.
+- Теги профиля (хобби, профессии) — в `common/data/tags.py`, достались от Вастрика как есть.
+
+## Тесты
+
+```sh
+TESTS_RUN=true uv run python manage.py test   # нужны запущенные Postgres и Redis
+npm test --prefix frontend
+```
+
+## Обновления движка
+
+Оригинальный репозиторий подключён как `upstream`, если склонировать так:
+
+```sh
+git remote add upstream https://github.com/vas3k/vas3k.club
+git fetch upstream
+```
+
+История этого репозитория начинается со снимка движка, поэтому изменения из upstream переносятся вручную (`git diff 8305ac0 upstream/master` по нужным файлам).
+
+## Благодарности
+
+Движок — [vas3k.club](https://github.com/vas3k/vas3k.club), © Vasily Zubarev, лицензия MIT (см. `LICENSE`). Оригинальный README — [docs/UPSTREAM_README.md](docs/UPSTREAM_README.md), техническая документация движка — в `docs/`.

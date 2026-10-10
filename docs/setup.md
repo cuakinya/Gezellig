@@ -62,7 +62,7 @@ Dev login shortcuts still work: `/godmode/dev_login/` and `/godmode/random_login
 
 ## Telegram bot / helpdesk bot
 
-1. `cp ./club/.env.example ./club/.env`
+1. `cp .env.example .env`
 2. Fill the Telegram-related fields (`TELEGRAM_TOKEN`, chat/channel IDs, etc.)
    - Token: [@BotFather](https://t.me/BotFather)
    - Chat/channel IDs: forward a message to [@JsonDumpBot](https://t.me/JsonDumpBot) or [@getidsbot](https://t.me/getidsbot)
