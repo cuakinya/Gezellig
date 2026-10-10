@@ -475,6 +475,93 @@ wheels = [
 ]
 
 [[package]]
+name = "hezellikh"
+version = "0.1.0"
+source = { virtual = "." }
+dependencies = [
+    { name = "authlib" },
+    { name = "awesome-slugify" },
+    { name = "beautifulsoup4" },
+    { name = "click" },
+    { name = "croniter" },
+    { name = "cryptography" },
+    { name = "django" },
+    { name = "django-q2", extra = ["sentry"] },
+    { name = "django-redis" },
+    { name = "django-simple-history" },
+    { name = "django-webpack-loader" },
+    { name = "gunicorn" },
+    { name = "icalendar" },
+    { name = "joserfc" },
+    { name = "lxml" },
+    { name = "mistune" },
+    { name = "openai" },
+    { name = "patreon" },
+    { name = "pillow" },
+    { name = "premailer" },
+    { name = "psycopg", extra = ["pool"] },
+    { name = "pyjwt" },
+    { name = "python-dotenv" },
+    { name = "python-telegram-bot", extra = ["webhooks"] },
+    { name = "redis" },
+    { name = "requests" },
+    { name = "sentry-sdk" },
+    { name = "stripe" },
+    { name = "telethon" },
+    { name = "typus" },
+    { name = "yookassa" },
+]
+
+[package.dev-dependencies]
+dev = [
+    { name = "django-debug-toolbar" },
+    { name = "flake8" },
+    { name = "pytest" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "authlib", specifier = "==1.7.2" },
+    { name = "awesome-slugify", specifier = ">=1.6.5" },
+    { name = "beautifulsoup4", specifier = ">=4.14.3" },
+    { name = "click", specifier = ">=8.4.2" },
+    { name = "croniter", specifier = ">=6.2.4" },
+    { name = "cryptography", specifier = ">=39.0.2" },
+    { name = "django", specifier = "==6.0.7" },
+    { name = "django-q2", extras = ["sentry"], specifier = "==1.10.0" },
+    { name = "django-redis", specifier = "==7.0.0" },
+    { name = "django-simple-history", specifier = "==3.12.0" },
+    { name = "django-webpack-loader", specifier = "==3.2.4" },
+    { name = "gunicorn", specifier = "==26.0.0" },
+    { name = "icalendar", specifier = ">=7.2.0" },
+    { name = "joserfc", specifier = ">=1.7.4" },
+    { name = "lxml", specifier = "==6.1.1" },
+    { name = "mistune", specifier = "==3.3.3" },
+    { name = "openai", specifier = ">=2.46.0" },
+    { name = "patreon", specifier = ">=0.5" },
+    { name = "pillow", specifier = ">=10.1.0" },
+    { name = "premailer", specifier = "==3.10.0" },
+    { name = "psycopg", extras = ["pool"], specifier = ">=3.3.4" },
+    { name = "pyjwt", specifier = "==2.13.0" },
+    { name = "python-dotenv", specifier = ">=0.12" },
+    { name = "python-telegram-bot", extras = ["webhooks"], specifier = "==22.8" },
+    { name = "redis", specifier = "==8.0.1" },
+    { name = "requests", specifier = "==2.34.2" },
+    { name = "sentry-sdk", specifier = "==2.66.0" },
+    { name = "stripe", specifier = "==11.4.1" },
+    { name = "telethon", specifier = ">=1.45.0" },
+    { name = "typus", specifier = ">=0.2.2" },
+    { name = "yookassa", specifier = "==3.11.0" },
+]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "django-debug-toolbar", specifier = "==7.0.0" },
+    { name = "flake8", specifier = ">=7.3.0" },
+    { name = "pytest", specifier = ">=9.1.1" },
+]
+
+[[package]]
 name = "httpcore"
 version = "1.0.9"
 source = { registry = "https://pypi.org/simple" }
@@ -1113,15 +1200,15 @@ wheels = [
 
 [[package]]
 name = "telethon"
-version = "1.44.0"
+version = "1.45.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "pyaes" },
     { name = "rsa" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/49/e2/d4137e598db0ba50e4cf9bf32f2e26d016b2c4bb0e9763e3d5a07007d780/telethon-1.44.0.tar.gz", hash = "sha256:7de1473e9e412e20bd57b102d8f50d48372712462be9ff6c003bb81c50ad7e98", size = 701463, upload-time = "2026-06-15T15:47:39.44Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/d5/07/b23b6cc73cd994763fbd641d196904f56cc966035eda841275b5689c6e5f/telethon-1.45.0.tar.gz", hash = "sha256:4cb7ae269b8ab9dad9fc490b859f0bc2f885121e990f5b20407b1faa0db2a1d9", size = 728057, upload-time = "2026-09-10T14:28:04.739Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/82/fd/4ad621d7a4b8655dfc964ee1c1267407496ec6fd10c91901a64ea29c16c8/telethon-1.44.0-py3-none-any.whl", hash = "sha256:52fc49efb67a4916c2aedcb295ad286f4afa2aba9bf15d83ed2acdc64af0c718", size = 789786, upload-time = "2026-06-15T15:47:41.534Z" },
+    { url = "https://files.pythonhosted.org/packages/92/ac/241c09e6905215f225d8088438ceb1f32cc4b4865f3f49068cb402debfd7/telethon-1.45.0-py3-none-any.whl", hash = "sha256:339e24c83aedc9f12cbe389264627edc49779e4289c535aa90aafc4ce62f7972", size = 804098, upload-time = "2026-09-10T14:28:03.115Z" },
 ]
 
 [[package]]
@@ -1205,93 +1292,6 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/53/0c/06f8b233b8fd13b9e5ee11424ef85419ba0d8ba0b3138bf360be2ff56953/urllib3-2.7.0.tar.gz", hash = "sha256:231e0ec3b63ceb14667c67be60f2f2c40a518cb38b03af60abc813da26505f4c", size = 433602, upload-time = "2026-05-07T16:13:18.596Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/7f/3e/5db95bcf282c52709639744ca2a8b149baccf648e39c8cc87553df9eae0c/urllib3-2.7.0-py3-none-any.whl", hash = "sha256:9fb4c81ebbb1ce9531cce37674bbc6f1360472bc18ca9a553ede278ef7276897", size = 131087, upload-time = "2026-05-07T16:13:17.151Z" },
-]
-
-[[package]]
-name = "hezellikh"
-version = "0.1.0"
-source = { virtual = "." }
-dependencies = [
-    { name = "authlib" },
-    { name = "awesome-slugify" },
-    { name = "beautifulsoup4" },
-    { name = "click" },
-    { name = "croniter" },
-    { name = "cryptography" },
-    { name = "django" },
-    { name = "django-q2", extra = ["sentry"] },
-    { name = "django-redis" },
-    { name = "django-simple-history" },
-    { name = "django-webpack-loader" },
-    { name = "gunicorn" },
-    { name = "icalendar" },
-    { name = "joserfc" },
-    { name = "lxml" },
-    { name = "mistune" },
-    { name = "openai" },
-    { name = "patreon" },
-    { name = "pillow" },
-    { name = "premailer" },
-    { name = "psycopg", extra = ["pool"] },
-    { name = "pyjwt" },
-    { name = "python-dotenv" },
-    { name = "python-telegram-bot", extra = ["webhooks"] },
-    { name = "redis" },
-    { name = "requests" },
-    { name = "sentry-sdk" },
-    { name = "stripe" },
-    { name = "telethon" },
-    { name = "typus" },
-    { name = "yookassa" },
-]
-
-[package.dev-dependencies]
-dev = [
-    { name = "django-debug-toolbar" },
-    { name = "flake8" },
-    { name = "pytest" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "authlib", specifier = "==1.7.2" },
-    { name = "awesome-slugify", specifier = ">=1.6.5" },
-    { name = "beautifulsoup4", specifier = ">=4.14.3" },
-    { name = "click", specifier = ">=8.4.2" },
-    { name = "croniter", specifier = ">=6.2.4" },
-    { name = "cryptography", specifier = ">=39.0.2" },
-    { name = "django", specifier = "==6.0.7" },
-    { name = "django-q2", extras = ["sentry"], specifier = "==1.10.0" },
-    { name = "django-redis", specifier = "==7.0.0" },
-    { name = "django-simple-history", specifier = "==3.12.0" },
-    { name = "django-webpack-loader", specifier = "==3.2.4" },
-    { name = "gunicorn", specifier = "==26.0.0" },
-    { name = "icalendar", specifier = ">=7.2.0" },
-    { name = "joserfc", specifier = ">=1.7.4" },
-    { name = "lxml", specifier = "==6.1.1" },
-    { name = "mistune", specifier = "==3.3.3" },
-    { name = "openai", specifier = ">=2.46.0" },
-    { name = "patreon", specifier = ">=0.5" },
-    { name = "pillow", specifier = ">=10.1.0" },
-    { name = "premailer", specifier = "==3.10.0" },
-    { name = "psycopg", extras = ["pool"], specifier = ">=3.3.4" },
-    { name = "pyjwt", specifier = "==2.13.0" },
-    { name = "python-dotenv", specifier = ">=0.12" },
-    { name = "python-telegram-bot", extras = ["webhooks"], specifier = "==22.8" },
-    { name = "redis", specifier = "==8.0.1" },
-    { name = "requests", specifier = "==2.34.2" },
-    { name = "sentry-sdk", specifier = "==2.66.0" },
-    { name = "stripe", specifier = "==11.4.1" },
-    { name = "telethon", specifier = ">=1.44.0" },
-    { name = "typus", specifier = ">=0.2.2" },
-    { name = "yookassa", specifier = "==3.11.0" },
-]
-
-[package.metadata.requires-dev]
-dev = [
-    { name = "django-debug-toolbar", specifier = "==7.0.0" },
-    { name = "flake8", specifier = ">=7.3.0" },
-    { name = "pytest", specifier = ">=9.1.1" },
 ]
 
 [[package]]
