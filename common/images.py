@@ -7,6 +7,7 @@ import requests
 from PIL import Image
 from django.conf import settings
 
+from common.media import is_local_storage, save_image
 from common.url_security import is_url_safe_for_fetch
 
 log = logging.getLogger(__name__)
@@ -17,6 +18,10 @@ def upload_image_multipart(
 ):
     if not data:
         return None
+
+    if is_local_storage():
+        raw = data.read() if hasattr(data, "read") else data
+        return save_image(raw, resize=resize, convert_to=convert_to, quality=quality)
 
     if resize:
         try:
@@ -71,7 +76,7 @@ def upload_image_multipart(
 
 
 def upload_image_from_url(url, resize=(192, 192), convert_to="jpg", quality=90):
-    if settings.DEBUG or not settings.MEDIA_UPLOAD_URL or not settings.MEDIA_UPLOAD_CODE:
+    if settings.DEBUG or (not is_local_storage() and not settings.MEDIA_UPLOAD_CODE):
         return url
 
     if not url:

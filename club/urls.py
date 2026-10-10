@@ -18,6 +18,7 @@ from comments.api import api_list_post_comments
 from comments.views import create_comment, edit_comment, delete_comment, show_comment, upvote_comment, \
     retract_comment_vote, pin_comment, delete_comment_thread
 from common.feature_flags import feature_switch
+from common.views import upload_media
 from invites.views import show_invite, list_invites, activate_invite, godmode_generate_invite_code
 from landing.views import landing
 from godmode.views.main import godmode, godmode_list_model, godmode_edit_model, godmode_delete_model, \
@@ -90,6 +91,8 @@ urlpatterns = [
     path("auth/openid/authorize", openid_authorize, name="openid_authorize"),
     path("auth/openid/token", openid_issue_token, name="openid_issue_token"),
     path("auth/openid/revoke", openid_revoke_token, name="openid_revoke_token"),
+
+    path("upload/", upload_media, name="upload_media"),
 
     path("monies/", pay, name="pay"),
     path("monies/stripe/", stripe_pay, name="stripe_pay"),  # Stripe отключён в интерфейсе, код оставлен
@@ -260,6 +263,9 @@ urlpatterns = [
 ]
 
 if settings.DEBUG:
+    from django.conf.urls.static import static
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
     import debug_toolbar
     urlpatterns = [path("__debug__/", include(debug_toolbar.urls))] + urlpatterns
 

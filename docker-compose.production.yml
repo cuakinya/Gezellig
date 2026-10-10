@@ -1,6 +1,6 @@
 services:
     club_app: &app
-        image: ghcr.io/vas3k/club:${GITHUB_SHA:-latest}
+        image: ghcr.io/cuakinya/gezellig:${GITHUB_SHA:-latest}
         user: root
         command: make docker-run-production
         container_name: club_app
@@ -10,12 +10,12 @@ services:
             - MODE=production
             - PYTHONUNBUFFERED=1
             - DEBUG=false
-            - APP_HOST=https://vas3k.club
-            - MEDIA_UPLOAD_URL=https://i.vas3k.club/upload/
+            - APP_HOST=https://club.example.com
+            - MEDIA_UPLOAD_URL=/upload/
             - REDIS_DB=0
             - REDIS_HOST=redis
-            - POSTGRES_DB=vas3k_club
-            - POSTGRES_USER=vas3k
+            - POSTGRES_DB=hezellikh
+            - POSTGRES_USER=club
             - POSTGRES_HOST=host.docker.internal
             - POSTGRES_USE_POOLING=0
             - POSTGRES_PASSWORD
@@ -30,6 +30,7 @@ services:
         volumes:
             - ./frontend/static:/tmp/static
             - ./gdpr/downloads:/app/gdpr/downloads
+            - ./media:/app/media
         depends_on:
             redis:
                 condition: service_healthy
@@ -48,12 +49,12 @@ services:
             - MODE=production
             - PYTHONUNBUFFERED=1
             - DEBUG=false
-            - APP_HOST=https://vas3k.club
-            - MEDIA_UPLOAD_URL=https://i.vas3k.club/upload/
+            - APP_HOST=https://club.example.com
+            - MEDIA_UPLOAD_URL=/upload/
             - REDIS_DB=0
             - REDIS_HOST=redis
-            - POSTGRES_DB=vas3k_club
-            - POSTGRES_USER=vas3k
+            - POSTGRES_DB=hezellikh
+            - POSTGRES_USER=club
             - POSTGRES_HOST=host.docker.internal
             - POSTGRES_USE_POOLING=0
             - POSTGRES_PASSWORD
