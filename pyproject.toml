@@ -6,7 +6,7 @@ dependencies = [
     "authlib==1.7.2",
     "awesome-slugify>=1.6.5",
     "beautifulsoup4>=4.14.3",
-    "click>=8.4.2",
+    "click>=8.5.0",
     "croniter>=6.2.4",
     "cryptography>=39.0.2",
     "django==6.0.7",
