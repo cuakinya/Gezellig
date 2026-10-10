@@ -199,18 +199,70 @@ PRODUCTS = {
     },
 }
 
+# Тарифы для оплаты через ЮKassa (разовые покупки, без автопродления).
+# ЦЕНЫ — ЗАГЛУШКИ: финальные цены и набор периодов ещё не утверждены.
+# Порядок в словаре = порядок карточек на странице выбора пакета.
 YOOKASSA_PRODUCTS = {
-    "club1_ru": {
-        "code": "club1_ru",
+    "club1m_ru": {
+        "code": "club1m_ru",
+        "title": "На месяц",
+        "description": "+1 месяц в Клубе",
+        "amount": "150.00",
+        "recurrent": False,
+        "activator": club_subscription_activator,
+        "data": {
+            "timedelta": timedelta(days=31),
+        },
+    },
+    "club3m_ru": {
+        "code": "club3m_ru",
+        "title": "На 3 месяца",
+        "description": "+3 месяца в Клубе",
+        "amount": "450.00",
+        "recurrent": False,
+        "activator": club_subscription_activator,
+        "data": {
+            "timedelta": timedelta(days=92),
+        },
+    },
+    "club12m_ru": {
+        "code": "club12m_ru",
+        "title": "На год",
         "description": "+1 год в Клубе",
-        "amount": "3400.00",
+        "amount": "1800.00",
         "recurrent": False,
         "activator": club_subscription_activator,
         "data": {
             "timedelta": timedelta(days=366),
         },
-    }
+    },
 }
+
+# Инвайт — подарочная покупка, на странице пакетов не показывается
+YOOKASSA_INVITE_PRODUCT = {
+    "code": "club_invite_ru",
+    "title": "Инвайт",
+    "description": "Инвайт в Клуб",
+    "amount": "150.00",
+    "recurrent": False,
+    "activator": club_invite_activator,
+    "data": {
+        "timedelta": timedelta(days=31),
+    },
+}
+
+YOOKASSA_DEFAULT_PRODUCT_CODE = "club1m_ru"
+
+
+def find_yookassa_product(code):
+    if code == YOOKASSA_INVITE_PRODUCT["code"]:
+        return YOOKASSA_INVITE_PRODUCT
+    return YOOKASSA_PRODUCTS.get(code)
+
+
+def find_product_by_code(code):
+    # платежи могли быть сделаны и через ЮKassa, и через старые Stripe-продукты
+    return find_yookassa_product(code) or PRODUCTS.get(code)
 
 
 def find_by_stripe_id(price_id):

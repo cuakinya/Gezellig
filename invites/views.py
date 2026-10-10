@@ -16,7 +16,7 @@ from notifications.telegram.users import notify_user_auth
 from club.exceptions import AccessDenied
 from invites.models import Invite
 from payments.models import Payment
-from payments.products import club_subscription_activator, PRODUCTS
+from payments.products import club_subscription_activator, find_product_by_code, YOOKASSA_INVITE_PRODUCT
 from users.models.user import User
 from utils.strings import random_string
 
@@ -98,7 +98,7 @@ def activate_invite(request, invite_code):
                     "message": "Возможно вы уже активировали его ранее? Проверьте свой профиль."
                 })
 
-            club_subscription_activator(PRODUCTS[invite.payment.product_code], invite.payment, request.me)
+            club_subscription_activator(find_product_by_code(invite.payment.product_code), invite.payment, request.me)
 
         return redirect(reverse("profile", args=[request.me.slug]))
 
@@ -145,7 +145,7 @@ def godmode_generate_invite_code(request):
         payment=Payment.create(
             reference="god-" + random_string(length=16),
             user=request.me,
-            product=PRODUCTS["club1_invite"],
+            product=YOOKASSA_INVITE_PRODUCT,
             status=Payment.STATUS_SUCCESS,
         )
     )
