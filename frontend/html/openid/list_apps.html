@@ -157,11 +157,7 @@
             <div class="block-description">
                 <p>
                     Чтобы аутентифицировать конкретных юзеров через Клуб, у нас есть OAuth/OpenID провайдер.
-                    Такой способ подойдет, если вы делаете сторонний проект типа Сикрет Санты и хотите сделать кнопку «Войти через Вастрик.Клуб».
-                </p>
-
-                <p>
-                    Пример можно посмотреть у меня в <a href="https://vas3k.blog/login/" target="_blank">блоге</a> (вот <a href="https://github.com/vas3k/vas3k.blog/blob/main/authn/views.py#L27" target="_blank">код</a>).
+                    Такой способ подойдет, если вы делаете сторонний проект типа Сикрет Санты и хотите сделать кнопку «Войти через {% club_name %}».
                 </p>
 
                 <p>
@@ -178,7 +174,7 @@
                 </p>
 
                 <p>
-                    <strong>Шаг 2.</strong> Теперь отправляйтесь в наш гайд по <a href="https://vas3k.club/post/openid/">OpenID в Клубе</a>.
+                    <strong>Шаг 2.</strong> Теперь отправляйтесь в наш гайд по <a href="https://github.com/vas3k/vas3k.club/blob/master/docs/tech_guide.md" target="_blank">OpenID в движке клуба</a>.
                 </p>
 
                 <p>
@@ -196,23 +192,7 @@
 
             <div class="block-description">
                 <p>
-                    Исходный код Клуба открыт на гитхабе: <a href="https://github.com/vas3k/vas3k.club" target="_blank">github.com/vas3k/vas3k.club</a>
-                </p>
-
-                <p>
-                    Можно присылать баги в <a href="https://github.com/vas3k/vas3k.club/issues" target="_blank">Issues</a> или даже сразу фиксить их в <a href="https://github.com/vas3k/vas3k.club/pulls" target="_blank">пулл-реквестах</a>.
-                </p>
-
-                <p>
-                    Обсуждение разработки и идей — в дев-чате <a href="https://t.me/vas3k_club_dev" target="_blank">t.me/vas3k_club_dev</a>.
-                </p>
-
-                <p>
-                    Мы в опенсорсе, потому что не скрываем наших алгоритмов. Так, например, любой человек может ознакомиться с <a href="https://github.com/vas3k/vas3k.club/blob/master/posts/views/feed.py" target="_blank">ранжированием</a> на главной, посмотреть <a href="https://github.com/vas3k/vas3k.club/blob/master/users/models/user.py" target="_blank">какие</a> данные мы храним о пользователях или узнать как <a href="https://github.com/vas3k/vas3k.club/blob/master/frontend/static/js/components/PeopleMap.vue" target="_blank">работает</a> карта Клуба.
-                </p>
-
-                <p>
-                    Форкать Клуб можно, но на свой страх и риск. Движок Клуба слишком сильно захардкожен под наши нужды, так что проще будет найти что-то универсальное.
+                    Клуб работает на открытом движке <a href="https://github.com/vas3k/vas3k.club" target="_blank">vas3k.club</a> (лицензия MIT).
                 </p>
             </div>
         </div>

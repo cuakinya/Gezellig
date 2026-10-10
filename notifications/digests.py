@@ -281,6 +281,6 @@ def generate_weekly_digest(no_footer=False):
         "issue_number": issue_number,
         "pro_tip": pro_tip,
         "is_footer_excluded": no_footer,
-        "og_image_url": f"{settings.OG_IMAGE_GENERATOR_URL}?{og_params}",
+        "og_image_url": f"{settings.OG_IMAGE_GENERATOR_URL}?{og_params}" if settings.OG_IMAGE_GENERATOR_URL else settings.OG_IMAGE_DEFAULT,
         "og_description": og_description,
     }), og_description

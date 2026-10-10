@@ -16,7 +16,7 @@
 
         {% if me.membership_platform_type == "patreon" %}
             <div class="block pay-subscription">
-                🙂 Подключён <a href="https://www.patreon.com/vas3k" target="_blank">Patreon</a>.
+                🙂 Подключён Patreon.
                 Рекомендуем по возможности перейти на прямую оплату ниже.
             </div>
         {% else %}
@@ -47,7 +47,7 @@
         {% endif %}
 
         <div class="block-description block-description-center">
-            О любых проблемах с оплатой сразу пишите на <a href="mailto:monies@vas3k.club">monies@vas3k.club</a>.<br>
+            О любых проблемах с оплатой сразу пишите на <a href="mailto:{% club_email "payments" %}">{% club_email "payments" %}</a>.<br>
             Мы можем исправить или откатить любую транзакцию, так что не волнуйтесь.
         </div>
 

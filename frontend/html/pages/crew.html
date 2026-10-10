@@ -37,7 +37,7 @@
             </p>
 
             <p>
-                <a href="mailto:moderator@vas3k.club" class="button">Написать модераторам</a>
+                <a href="mailto:{% club_email "moderator" %}" class="button">Написать модераторам</a>
             </p>
         </div>
 
@@ -47,6 +47,7 @@
             {% endfor %}
         </div>
 
+        {% if parliament %}{# раздел появится, когда у кого-то будет эта роль #}
         <div class="stats-header" id="parliament"><a href="#parliament" style="text-decoration: none;">🏛 Парламент</a></div>
 
         <div class="stats-description">
@@ -80,7 +81,9 @@
                 {% include "users/widgets/round.html" with user=user show_name=True %}
             {% endfor %}
         </div>
+        {% endif %}
 
+        {% if ministers %}{# раздел появится, когда у кого-то будет эта роль #}
         <div class="stats-header" id="vibes"><a href="#vibes" style="text-decoration: none;">✨ Министерство Вайбов ✨</a></div>
 
         <div class="stats-description">
@@ -110,12 +113,14 @@
                 {% include "users/widgets/round.html" with user=user show_name=True %}
             {% endfor %}
         </div>
+        {% endif %}
 
+        {% if orgs %}{# раздел появится, когда у кого-то будет эта роль #}
         <div class="stats-header" id="events"><a href="#events" style="text-decoration: none;">🔥 Орги оффлайн-ивентов</a></div>
 
         <div class="stats-description">
             <p>
-                Команда организаторов оффлайновых Вастрик Ивентов. Они отвечают за Кэмпы, Флоты, Бёрны и прочие большие клубные события в оффлайне.
+                Команда организаторов офлайн-встреч Клуба.
                 Им можно закидывать свои идеи по поводу новых форматов или активностей для следующих мероприятий.
             </p>
             <p>
@@ -128,5 +133,6 @@
                 {% include "users/widgets/round.html" with user=user show_name=True %}
             {% endfor %}
         </div>
+        {% endif %}
     </div>
 {% endblock %}

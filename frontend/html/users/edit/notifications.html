@@ -27,7 +27,7 @@
                     <br>
                     <div class="block form-warning">
                         ⚠️ Вы не подтвердили свой адрес электронной почты, так что мы пока не будем слать на него рассылки.
-                        Кнопка подтверждения была в «Велком дринке». Если вы удалили то письмо, придётся написать нам <a href="mailto:club@vas3k.club">на почту</a>.
+                        Кнопка подтверждения была в «Велком дринке». Если вы удалили то письмо, придётся написать нам <a href="mailto:{% club_email %}">на почту</a>.
                     </div>
                 {% endif %}
 
@@ -74,9 +74,8 @@
                     🌐 <a href="{% url "network" %}" rel="noreferrer" target="_blank" style="font-weight: bold;">Сеть Чатов</a> — наши чаты на любые темы. Туда автоматически попадают тематические посты.<br><br>
                     🤖 <a href="{% url "edit_bot" user.slug %}" target="_blank" style="font-weight: bold;">Подключите нашего бота</a> — он будет приносить уведомления, касающиеся лично вас.<br><br>
                     <a href="{{ settings.TELEGRAM_ONLINE_CHANNEL_URL }}" rel="noreferrer" target="_blank" style="font-weight: bold;">Онлайн</a> — прямой эфир всего. Только для самых хардкорных.<br><br>
-                    <a href="https://vas3k.club/room/best_comments/chat/" rel="noreferrer" target="_blank" style="font-weight: bold;">Мякотка</a> — фид самых заплюсованных комментариев.<br><br>
-                    <a href="https://twitter.com/vas3k_club" rel="noreferrer" target="_blank" style="font-weight: bold;">Твиттер</a> — автоматическая лента новых постов в твиттере.<br><br>
-                    👾 <strong>RSS:</strong> <a href="{% url "rss" %}">vas3k.club/posts.rss</a><br><br>
+                    <a href="{% club_url %}/room/best_comments/chat/" rel="noreferrer" target="_blank" style="font-weight: bold;">Мякотка</a> — фид самых заплюсованных комментариев.<br><br>
+                    👾 <strong>RSS:</strong> <a href="{% url "rss" %}">{% club_url %}{% url "rss" %}</a><br><br>
                 </div>
             </div>
         </form>

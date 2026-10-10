@@ -22,10 +22,10 @@
 
     {% block feeds %}
         <link rel="alternate" type="application/rss+xml"
-              title="Вастрик.Клуб: Новые посты"
+              title="{% club_name %}: Новые посты"
               href="{{ settings.APP_HOST }}{% url "rss" %}" />
 
-        <link rel="alternate" title="Вастрик.Клуб: JSON Feed"
+        <link rel="alternate" title="{% club_name %}: JSON Feed"
               type="application/feed+json"
               href="{{ settings.APP_HOST }}{% url "json_feed" %}" />
     {% endblock %}
@@ -74,9 +74,7 @@
                 <a href="{% url "invites" %}">Пригласить друга</a> &nbsp;&middot;&nbsp;
             {% endif %}
 
-            <a href="https://github.com/vas3k/vas3k.club">Опенсорс</a> &nbsp;&middot;&nbsp;
-
-            <a href="{% url "show_post" "docs" "blocked_dolor" %}">Оплата из России</a>
+            <a href="https://github.com/vas3k/vas3k.club" target="_blank">Сделано на движке vas3k.club</a>
 
             <br><br>
 
