@@ -212,9 +212,11 @@ LANDING_CACHE_TIMEOUT = 60 * 60 * 24  # 24 hours
 
 # Email
 
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = os.getenv("EMAIL_HOST", "email-smtp.eu-central-1.amazonaws.com")
-EMAIL_PORT = os.getenv("EMAIL_PORT", 587)
+EMAIL_HOST = os.getenv("EMAIL_HOST") or ""
+# Пока SMTP не настроен, письма (в том числе коды входа) печатаются в консоль сервера
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend" if EMAIL_HOST \
+    else "django.core.mail.backends.console.EmailBackend"
+EMAIL_PORT = int(os.getenv("EMAIL_PORT") or 587)
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 EMAIL_USE_TLS = True
