@@ -46,6 +46,8 @@ def prepare_letter(html, base_url):
         keep_style_tags=True,
         capitalize_float_margin=True,
         cssutils_logging_level=logging.CRITICAL,
+        # не скачивать внешние стили (шрифты Google): если они недоступны, письмо — включая код входа — не уходило
+        allow_network=False,
     ).transform()
     if "<!doctype" not in html:
         html = f"<!doctype html>{html}"

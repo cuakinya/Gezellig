@@ -17,7 +17,7 @@ docker compose up
 
 ### Без Docker
 
-Нужны Python 3.13+, [uv](https://docs.astral.sh/uv/), Node 22+, PostgreSQL и Redis.
+Нужны [uv](https://docs.astral.sh/uv/) (он сам поставит Python 3.14), Node 22+, PostgreSQL и Redis.
 
 ```sh
 cp .env.example .env                 # проверить POSTGRES_* и REDIS_HOST
@@ -29,6 +29,8 @@ uv run python manage.py update_tags
 uv run python manage.py runserver    # сайт
 uv run python manage.py qcluster     # очередь задач (письма, уведомления) — в отдельном окне
 ```
+
+Пока в `.env` не задан `EMAIL_HOST`, письма никуда не отправляются, а печатаются в окне `qcluster` — там же код для входа (в теме письма). Если запускаете сайт не на порту 8000, поправьте `APP_HOST` — из него строятся ссылки в письмах и платежах.
 
 ### Войти
 
