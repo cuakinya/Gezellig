@@ -57,7 +57,7 @@ class TestYookassaPayView(TestCase):
         session = fake_yookassa_session()
         mocked_yookassa.create.return_value = session
 
-        HelperClient(user=self.member).get(reverse("pay"))
+        HelperClient(user=self.member).authorise().get(reverse("pay"))
 
         self.assertEqual(Payment.get(reference=session.id).product_code, YOOKASSA_DEFAULT_PRODUCT_CODE)
 
@@ -65,7 +65,7 @@ class TestYookassaPayView(TestCase):
         session = fake_yookassa_session()
         mocked_yookassa.create.return_value = session
 
-        response = HelperClient(user=self.member).get(
+        response = HelperClient(user=self.member).authorise().get(
             reverse("pay"), data={"product_code": YOOKASSA_INVITE_PRODUCT["code"]}
         )
 
