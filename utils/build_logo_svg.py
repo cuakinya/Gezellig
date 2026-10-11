@@ -15,6 +15,8 @@ TEAL_ON_DARK = "#2FA89B"
 PLUM = "#5A1A3A"
 PLUM_ON_DARK = "#D98BB0"
 OLIVE = "#6E7B3A"
+OLIVE_ON_DARK = "#8FA04A"
+TERRACOTTA_ON_DARK = "#D2704D"
 
 WORD = "Хезеллих"
 LETTER_COLORS = [TERRACOTTA, MUSTARD, TEAL, PLUM, OLIVE, TERRACOTTA, MUSTARD, TEAL]
@@ -53,6 +55,10 @@ def word_paths(dark=False, size=100.0):
             color = PLUM_ON_DARK
         if dark and color == TEAL:
             color = TEAL_ON_DARK
+        if dark and color == OLIVE:
+            color = OLIVE_ON_DARK
+        if dark and color == TERRACOTTA:
+            color = TERRACOTTA_ON_DARK
         name = cmap[ord(ch)]
         pen = SVGPathPen(glyph_set)
         # y вниз: отражаем, базовая линия на y=0

@@ -39,7 +39,6 @@ def main():
         # знак для шапки сайта и аватарок
         for size in (128, 256, 512, 1024):
             render(page, "icon.svg", size, size).save(os.path.join(ROOT, "logo", f"logo-{size}.png"))
-        render(page, "icon.svg", 256, 256).save(os.path.join(ROOT, "logo", "logo-white-256.png"))
 
         # полный логотип
         render(page, "logo-light.svg", 1200, 210).save(os.path.join(ROOT, "logo", "logo-full.png"))
@@ -60,7 +59,6 @@ def main():
         ico.save(os.path.join(fav, "favicon.ico"), sizes=[(16, 16), (32, 32), (48, 48)])
         icon_svg = open(os.path.join(SRC, "icon.svg")).read()
         open(os.path.join(fav, "favicon.svg"), "w").write(icon_svg)
-        open(os.path.join(fav, "favicon-dark.svg"), "w").write(icon_svg)
 
         # превью для соцсетей 1200x630
         share = render(page, "logo-light.svg", 1000, 630, background="#FFFFFF")
