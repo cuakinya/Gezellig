@@ -253,9 +253,7 @@
             top: -2px;
         }
 
-            html[theme="dark"] .logo img {
-                filter: invert();
-            }
+            /* логотип цветной и читается на обеих темах — не инвертируем */
 
             @media (prefers-color-scheme: dark) {
                 html:not([theme]) .logo img {

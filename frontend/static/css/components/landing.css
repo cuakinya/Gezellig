@@ -324,3 +324,9 @@
     height: 150px;
     float: right;
 }
+
+.landing-title .landing-logo {
+    height: 1.6em;
+    width: auto;
+    max-width: 90vw;
+}
