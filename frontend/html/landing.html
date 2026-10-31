@@ -22,18 +22,28 @@
 {% block body %}
     {# Тексты с пометкой «придумано ИИ» — черновики, полный список в TODO.md. Список активностей — из заметки «Коммюнити полиглотов». #}
     <main class="landing">
-        <div class="landing-block landing-block-limited landing-hero">
-            <img src="{% static "images/logo/logo-hero.png" %}" alt="" class="landing-hero-image">
-            <div class="landing-title">
-                <h1><img src="{% static "images/logo/src/logo-dark.svg" %}" alt="{% club_name %}" class="landing-logo"></h1>
-                <p>Изучаем языки в уютной компании</p>
-                <a href="{% url "login" %}" class="button button-black">Войти</a>
-            </div>
-        </div>
+        <header class="landing-hero">
+            <svg class="landing-hero-mark" viewBox="0 0 100 100" width="96" height="96" aria-hidden="true">
+                <path d="M38 33 C33 27 43 23 38 15 M52 33 C47 27 57 23 52 15" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round"/>
+                <path d="M14 40 H76 C76 60 70 74 58 79 H32 C20 74 14 60 14 40 Z M75 46 C92 44 94 66 73 67 L73 60 C85 60 84 51 75 53 Z" fill="currentColor"/>
+                <path d="M45 69 C32 60 30 54 32 49 C34 44 41 43 45 49 C49 43 56 44 58 49 C60 54 58 60 45 69 Z" class="landing-hero-heart"/>
+            </svg>
+
+            <h1 class="landing-hero-title">{% club_name %}</h1>
+
+            <p class="landing-hero-entry" lang="nl">
+                <i>gezellig</i> <span class="landing-hero-ipa">[ɣəˈzɛləx]</span>
+                <span lang="ru"><abbr title="нидерландское">нидерл.</abbr> уютно, по‑свойски, когда хорошо вместе</span>
+            </p>
+
+            <p class="landing-hero-tagline">Изучаем языки в уютной компании</p>
+
+            <a href="{% url "login" %}" class="landing-cta">Войти</a>
+        </header>
 
         <div class="landing-block landing-block-narrow" id="why">
             <div>
-                <h2>ЗАЧЕМ</h2>
+                <h2>Зачем</h2>
 
                 <p>
                     (придумано ИИ, TODO заменить) Учить языки в одиночку скучно: приложение не спросит, как прошёл твой день, а учебник не позовёт на кофе.
@@ -82,7 +92,7 @@
                 <br>
 
                 <p>
-                    <a href="{% url "join" %}" class="button button-black button-big">Вступить в Клуб</a>
+                    <a href="{% url "join" %}" class="landing-cta">Вступить в Клуб</a>
                 </p>
             </div>
         </div>
