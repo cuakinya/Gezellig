@@ -17,16 +17,16 @@
     {% include "common/favicon.html" %}
     {% render_bundle "main" "css" %}
 </head>
-<body>
+<body class="landing-body">
 
 {% block body %}
     {# Тексты с пометкой «придумано ИИ» — черновики, полный список в TODO.md. Список активностей — из заметки «Коммюнити полиглотов». #}
     <main class="landing">
-        <div class="landing-block landing-block-limited">
-            <img src="{% static "images/logo/logo-hero.png" %}" alt="">
+        <div class="landing-block landing-block-limited landing-hero">
+            <img src="{% static "images/logo/logo-hero.png" %}" alt="" class="landing-hero-image">
             <div class="landing-title">
                 <h1><img src="{% static "images/logo/src/logo-dark.svg" %}" alt="{% club_name %}" class="landing-logo"></h1>
-                <p>(придумано ИИ, TODO заменить) Клуб для тех, кто учит языки</p>
+                <p>Изучаем языки в уютной компании</p>
                 <a href="{% url "login" %}" class="button button-black">Войти</a>
             </div>
         </div>

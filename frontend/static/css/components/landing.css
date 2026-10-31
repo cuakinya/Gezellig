@@ -330,3 +330,23 @@
     width: auto;
     max-width: 90vw;
 }
+
+/* Лендинг: зелёный фон и первый экран по центру */
+.landing-body {
+    background-color: #1f3a30;
+}
+
+.landing-hero .landing-hero-image {
+    display: block;
+    width: 100%;
+    max-width: 1024px;
+    height: auto;
+    margin: 0 auto;
+    flex: none;
+}
+
+.landing-hero .landing-title {
+    width: 90%;
+    max-width: 900px;
+    text-align: center;
+}

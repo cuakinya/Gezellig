@@ -8,7 +8,7 @@
 
 | Что | Где править |
 | --- | --- |
-| Лендинг: подзаголовок, блок «Зачем», блок «Как вступить» | [`frontend/html/landing.html`](frontend/html/landing.html) |
+| Лендинг: блок «Зачем», блок «Как вступить» | [`frontend/html/landing.html`](frontend/html/landing.html) |
 | О Клубе | на сайте: `/docs/about/` → редактировать (или [`posts/migrations/0039_club_docs_ai_drafts.py`](posts/migrations/0039_club_docs_ai_drafts.py) для новых установок). Письмо-приветствие ссылается на раздел `/docs/about/#enter` («с чего начать») — в тексте его нет, добавить или убрать ссылку в [`frontend/html/emails/welcome.html`](frontend/html/emails/welcome.html) |
 | Наши ценности | `/docs/values/` |
 | Как писать посты | `/docs/posting/` |
