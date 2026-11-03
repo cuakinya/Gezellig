@@ -331,18 +331,23 @@
     max-width: 90vw;
 }
 
-/* Лендинг: вечер в кафе. Тёмный тёплый фон, свет лампы, один акцент — цвет свечи */
+/* Лендинг: «Голландский дом». Сливовый фон, домики на канале, пудрово-розовый акцент */
 .landing-body {
-    --gz-night: #231e1c;
-    --gz-lamp: #e3a857;
-    --gz-cream: #efe4d2;
-    --gz-muted: #b4a796;
-    --gz-display: "Alegreya", Georgia, serif;
+    --gz-bg: #2b2530;
+    --gz-text: #f4ece6;
+    --gz-muted: #b3a9b0;
+    --gz-accent: #e9a28f;
+    --gz-accent-hover: #f0b4a4;
+    --gz-display: "Yeseva One", Georgia, serif;
+    --gz-font: "Onest", "Ubuntu", system-ui, sans-serif;
 
-    background-color: var(--gz-night);
-    background-image: radial-gradient(ellipse 70% 55% at 50% 0%, rgba(227, 168, 87, 0.13), transparent 70%);
-    background-repeat: no-repeat;
+    background: var(--gz-bg);
     color: var(--gz-muted);
+    font-family: var(--gz-font);
+}
+
+.landing-body .landing {
+    padding-top: 0;
 }
 
 .landing-body .landing-block p {
@@ -352,14 +357,17 @@
 .landing-body .landing-block h2,
 .landing-body .landing-block-title {
     font-family: var(--gz-display);
-    font-weight: 600;
-    color: var(--gz-cream);
-    letter-spacing: 0;
+    font-weight: 400;
+    color: var(--gz-text);
 }
 
 .landing-body a:not(.landing-cta) {
-    color: var(--gz-cream);
-    text-decoration-color: rgba(227, 168, 87, 0.6);
+    color: var(--gz-text);
+    text-decoration-color: var(--gz-accent);
+}
+
+.landing-body .feature-list li::marker {
+    color: var(--gz-accent);
 }
 
 .landing-body #features {
@@ -373,96 +381,94 @@
         text-align: left;
     }
 
-.landing-body .feature-list li::marker {
-    color: var(--gz-lamp);
-}
-
 .landing-body .footer,
 .landing-body .footer a {
     color: var(--gz-muted);
+    font-family: var(--gz-font);
 }
 
 .landing-hero {
-    max-width: 760px;
-    margin: 0 auto;
-    padding: 14vh 20px 12vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 92vh;
+    padding: 60px 20px 300px;
+    box-sizing: border-box;
     text-align: center;
+    background: url("../images/landing/houses.svg") repeat-x center bottom / auto 260px;
 }
 
     .landing-hero-mark {
-        display: block;
-        margin: 0 auto 8px;
-        color: var(--gz-lamp);
+        color: var(--gz-accent);
     }
 
-    .landing-hero-heart {
-        fill: var(--gz-night);
-    }
+        .landing-hero-cutout {
+            fill: var(--gz-bg);
+        }
 
     .landing-hero-title {
-        margin: 0;
+        margin: 12px 0 0;
         font-family: var(--gz-display);
-        font-weight: 500;
-        font-size: clamp(56px, 13vw, 128px);
-        line-height: 1;
-        color: var(--gz-cream);
-        letter-spacing: -0.01em;
+        font-weight: 400;
+        font-size: clamp(56px, 12vw, 112px);
+        line-height: 1.05;
+        color: var(--gz-text);
     }
 
     .landing-hero-entry {
-        margin: 22px auto 0;
         max-width: 34em;
-        font-family: var(--gz-display);
-        font-size: clamp(18px, 2.4vw, 22px);
+        margin: 18px 0 0;
+        font-size: clamp(16px, 2vw, 18px);
         line-height: 1.5;
         color: var(--gz-muted);
     }
 
         .landing-hero-entry i {
-            color: var(--gz-cream);
-            font-weight: 600;
-        }
-
-        .landing-hero-ipa {
-            margin: 0 0.35em;
-            opacity: 0.8;
+            color: var(--gz-text);
         }
 
         .landing-hero-entry abbr {
             font-style: italic;
             text-decoration: none;
-            margin-right: 0.25em;
         }
 
     .landing-hero-tagline {
-        margin: 44px 0 0;
-        font-size: clamp(20px, 3vw, 28px);
+        margin: 40px 0 0;
+        font-size: clamp(20px, 2.6vw, 25px);
         line-height: 1.35;
-        color: var(--gz-cream);
+        color: var(--gz-text);
     }
 
 .landing-cta {
     display: inline-block;
-    margin-top: 28px;
-    padding: 0.55em 1.6em;
-    border-radius: 999px;
-    background-color: var(--gz-lamp);
-    color: var(--gz-night);
-    font-size: 22px;
-    font-weight: 500;
+    margin-top: 26px;
+    padding: 14px 36px;
+    border-radius: 12px;
+    background-color: var(--gz-accent);
+    font-size: 19px;
+    font-weight: 600;
     text-decoration: none;
     transition: background-color 0.15s ease;
 }
 
     .landing-body a.landing-cta {
-        color: var(--gz-night);
+        color: var(--gz-bg);
     }
 
     .landing-cta:hover {
-        background-color: #ecbb73;
+        background-color: var(--gz-accent-hover);
     }
 
-    .landing-cta:focus-visible {
-        outline: 3px solid var(--gz-cream);
-        outline-offset: 3px;
+    .landing-body a:focus-visible {
+        outline: 2px solid var(--gz-text);
+        outline-offset: 4px;
     }
+
+@media only screen and (max-width: 570px) {
+    .landing-hero {
+        min-height: 86vh;
+        padding-bottom: 210px;
+        background-size: auto 190px;
+    }
+}
