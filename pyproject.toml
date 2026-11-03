@@ -14,7 +14,7 @@ dependencies = [
     "django-redis==7.0.0",
     "django-simple-history==3.12.0",
     "django-webpack-loader==3.2.4",
-    "gunicorn==26.0.0",
+    "gunicorn==26.2.0",
     "icalendar>=7.2.0",
     "joserfc>=1.7.4",
     "lxml==6.1.1",
