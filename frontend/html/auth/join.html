@@ -7,7 +7,15 @@
         <div class="join-title"><a href="{% url "index" %}">Вступить в Клуб</a></div>
 
         <div class="join-description">
-            (придумано ИИ, TODO заменить) Мы рады новым участникам! В Клубе принято знакомиться, поэтому после оплаты мы просим всех новичков заполнить профиль и написать интро — рассказ о себе. Его читают модераторы, и после одобрения вы получите полный доступ.
+            <p>Мы всегда рады новым людям! Чувствуйте себя как дома, но держите себя в руках :)</p>
+            <p>
+                После оплаты мы попросим заполнить профиль и рассказать о себе. Чтобы в клубе оставалось уютно,
+                эту информацию сначала посмотрят модераторы — и после этого пустят вас в клуб.
+            </p>
+            <p>
+                Для общего комфорта в клубе действуют <a href="{% url "show_post" "docs" "about" %}#Pravila-kluba" target="_blank">правила</a>, и мы внимательно следим
+                за их соблюдением. Пожалуйста, прочитайте их целиком (там мало воды, честно), чтобы случайно ничего не нарушить.
+            </p>
         </div>
 
         <form action="{% url "pay" %}" method="get">
@@ -24,7 +32,7 @@
             </div>
         </div>
 
-        <label class="join-consent"><input type="checkbox" name="iconsent" value="true" required> &larr; я даю согласие на обработку <a href="{% url "show_post" "docs" "privacy_policy" %}" target="_blank">персональных данных</a>, соглашаюсь с <a href="{% url "show_post" "docs" "about" %}" target="_blank">правилами</a> Клуба и помню, что мне нужно будет написать интро и пройти модерацию</label>
+        <label class="join-consent"><input type="checkbox" name="iconsent" value="true" required> &larr; я даю согласие на обработку <a href="{% url "show_post" "docs" "privacy_policy" %}" target="_blank">персональных данных</a>, соглашаюсь с <a href="{% url "show_post" "docs" "about" %}#Pravila-kluba" target="_blank">правилами</a> Клуба и помню, что мне нужно будет написать интро и пройти модерацию</label>
 
         <button type="submit" class="button button-big join-button">Перейти к оплате</button>
 
