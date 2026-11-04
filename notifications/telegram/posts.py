@@ -91,6 +91,11 @@ def send_published_post_to_moderators(post):
         log.warning(f"Failed to send post {post.id} to moderators, skipping AI review")
         return
 
+    # Оценка от ИИ приходит модераторам, только если задан OPENAI_API_KEY (подробнее — TODO.md, раздел 3).
+    # Без ключа карточка уходит модераторам как обычно, просто без оценки ИИ.
+    if not settings.OPENAI_API_KEY:
+        return
+
     try:
         ai_post_rate_text = ai_rate_post_quality(post)
         send_telegram_message(

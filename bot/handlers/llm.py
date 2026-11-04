@@ -11,6 +11,12 @@ from bot.decorators import ensure_fresh_db_connection
 from bot.handlers.common import get_club_user
 from common.markdown.markdown import markdown_tg
 
+AI_DISABLED_MESSAGE = (
+    "(придумано ИИ, TODO заменить) На вопросы я пока не отвечаю. "
+    "Зато через меня можно отвечать на комментарии и посты — просто ответьте реплаем на сообщение. "
+    "Остальные команды — в /help"
+)
+
 
 @ensure_fresh_db_connection
 async def llm_response(update: Update, context: CallbackContext) -> None:
@@ -42,6 +48,12 @@ async def llm_response(update: Update, context: CallbackContext) -> None:
             f"🙈 (придумано ИИ, TODO заменить) Я отвечаю только участникам с активным членством в Клубе. Продлить членство можно здесь: {settings.APP_HOST}/user/me/",
             link_preview_options=LinkPreviewOptions(is_disabled=True)
         )
+        return None
+
+    # ИИ-помощник работает только с ключом OpenAI. Без ключа вместо ошибки отвечаем, что умеет бот.
+    # Чтобы включить помощника — задать OPENAI_API_KEY в .env (подробнее — TODO.md, раздел 3).
+    if not settings.OPENAI_API_KEY:
+        await update.message.reply_text(AI_DISABLED_MESSAGE)
         return None
 
     await context.bot.send_chat_action(chat_id=update.effective_chat.id, action="typing")

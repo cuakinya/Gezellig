@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from unittest.mock import patch, MagicMock
 
-from django.test import TestCase
+from django.test import TestCase, override_settings
 
 from notifications.telegram.users import (
     notify_profile_needs_review,
@@ -28,6 +28,7 @@ def _create_user(slug, telegram_id="123456", **kwargs):
     )
 
 
+@override_settings(OPENAI_API_KEY="test-key")
 class TestNotifyProfileNeedsReview(TestCase):
     @patch("notifications.telegram.users.ai_rate_intro_quality", return_value="<b>AI intro review</b>")
     @patch("notifications.telegram.users.send_telegram_message")
@@ -129,6 +130,28 @@ class TestNotifyProfileNeedsReview(TestCase):
         mock_send.assert_called_once()
         mock_ai.assert_not_called()
 
+
+@override_settings(OPENAI_API_KEY=None)
+class TestNotifyProfileNeedsReviewWithoutAI(TestCase):
+    @patch("notifications.telegram.users.ai_rate_intro_quality")
+    @patch("notifications.telegram.users.send_telegram_message")
+    @patch("notifications.telegram.users.render_html_message", return_value="<b>review</b>")
+    def test_sends_only_review_without_ai(self, mock_render, mock_send, mock_ai):
+        user = _create_user("no_ai_review")
+        intro = Post.objects.create(
+            type=Post.TYPE_INTRO,
+            slug="no-ai-intro",
+            title="Intro",
+            text="Hello",
+            author=user,
+            visibility=Post.VISIBILITY_EVERYWHERE,
+        )
+        mock_send.return_value = MagicMock(message_id=1)
+
+        notify_profile_needs_review(user, intro)
+
+        mock_send.assert_called_once()
+        mock_ai.assert_not_called()
 
 class TestNotifyUserProfileApproved(TestCase):
     @patch("notifications.telegram.users.send_telegram_message")

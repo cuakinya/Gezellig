@@ -56,6 +56,11 @@ def notify_profile_needs_review(user, intro):
         log.warning(f"Failed to send intro review for user {user.slug} to moderators, skipping AI review")
         return
 
+    # Оценка от ИИ приходит модераторам, только если задан OPENAI_API_KEY (подробнее — TODO.md, раздел 3).
+    # Без ключа карточка уходит модераторам как обычно, просто без оценки ИИ.
+    if not settings.OPENAI_API_KEY:
+        return
+
     try:
         ai_intro_rate_text = ai_rate_intro_quality(user, intro)
         send_telegram_message(

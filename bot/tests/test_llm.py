@@ -13,14 +13,15 @@ import django
 django.setup()
 
 from django.conf import settings
-from django.test import TransactionTestCase
+from django.test import TransactionTestCase, override_settings
 from telegram import Update, Message, User as TgUser, Chat as TgChat
 
-from bot.handlers.llm import llm_response
+from bot.handlers.llm import llm_response, AI_DISABLED_MESSAGE
 from notifications.tests.telegram.test_common import BaseTelegramTest, ExpectedRequest, Request
 from users.models.user import User
 
 
+@override_settings(OPENAI_API_KEY="test-key")
 class LLMResponseTest(BaseTelegramTest, TransactionTestCase):
     """Test the llm_response handler with mock Telegram server"""
 
@@ -416,3 +417,53 @@ class LLMResponseTest(BaseTelegramTest, TransactionTestCase):
         asyncio.run(llm_response(update, context))
 
         self.assertTrue(self.server.wait_for_completion(timeout=5))
+
+
+@override_settings(OPENAI_API_KEY=None)
+class LLMDisabledTest(BaseTelegramTest, TransactionTestCase):
+    """Без ключа OpenAI бот не ходит в ИИ, а отвечает, что пока не отвечает на вопросы"""
+
+    tags = LLMResponseTest.tags
+    RESPONSE = LLMResponseTest.RESPONSE
+    SEND_MESSAGE_PATH = LLMResponseTest.SEND_MESSAGE_PATH
+    _create_update = LLMResponseTest._create_update
+
+    def setUp(self):
+        super().setUp()
+        now = datetime.now(timezone.utc)
+        self.test_user = User.objects.create(
+            slug="test-user",
+            email="test@example.com",
+            full_name="Test User",
+            secret_hash="test_secret_hash",
+            telegram_id="999",
+            membership_started_at=now,
+            membership_expires_at=now + timedelta(days=30),
+            moderation_status=User.MODERATION_STATUS_APPROVED,
+        )
+
+    @patch("bot.handlers.llm.ask_assistant")
+    def test_no_api_key_replies_without_ai(self, mock_ask_assistant):
+        update = self._create_update("Hello bot")
+        context = MagicMock()
+        context.bot = self.sync_bot.bot
+
+        self.server.expect_requests(
+            [
+                ExpectedRequest(
+                    Request(
+                        "POST",
+                        self.SEND_MESSAGE_PATH,
+                        {
+                            "chat_id": "12345",
+                            "text": AI_DISABLED_MESSAGE,
+                        },
+                    ),
+                    self.RESPONSE,
+                ),
+            ]
+        )
+
+        asyncio.run(llm_response(update, context))
+
+        mock_ask_assistant.assert_not_called()

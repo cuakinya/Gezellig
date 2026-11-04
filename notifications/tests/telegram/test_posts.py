@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from unittest.mock import patch, MagicMock
 
-from django.test import TestCase
+from django.test import TestCase, override_settings
 
 from notifications.telegram.common import Chat
 from notifications.telegram.posts import (
@@ -216,6 +216,7 @@ class TestSendIntroChangesToModerators(TestCase):
         mock_send.assert_not_called()
 
 
+@override_settings(OPENAI_API_KEY="test-key")
 class TestSendPublishedPostToModerators(TestCase):
     def setUp(self):
         self.author = _create_user("mod_author")
@@ -281,3 +282,17 @@ class TestSendPublishedPostToModerators(TestCase):
         mock_send.assert_called_once()
         mock_ai.assert_not_called()
 
+
+@override_settings(OPENAI_API_KEY=None)
+class TestSendPublishedPostToModeratorsWithoutAI(TestCase):
+    @patch("notifications.telegram.posts.ai_rate_post_quality")
+    @patch("notifications.telegram.posts.send_telegram_message")
+    @patch("notifications.telegram.posts.render_html_message", return_value="<b>review</b>")
+    def test_sends_only_post_without_ai(self, mock_render, mock_send, mock_ai):
+        post = _create_post(_create_user("no_ai_author"), slug="no-ai-post")
+        mock_send.return_value = MagicMock(message_id=1)
+
+        send_published_post_to_moderators(post)
+
+        mock_send.assert_called_once()
+        mock_ai.assert_not_called()
