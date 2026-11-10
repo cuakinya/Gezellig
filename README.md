@@ -51,7 +51,7 @@ uv run python manage.py qcluster     # очередь задач (письма, 
 | Оплата | `.env`: `YOOKASSA_SHOP_ID`, `YOOKASSA_API_KEY` |
 | Почта | `.env`: `EMAIL_*`, `DEFAULT_FROM_EMAIL` |
 | Telegram-бот и каналы | `.env`: `TELEGRAM_*` |
-| Карта участников | `.env`: `MAPBOX_TOKEN`, `MAPBOX_STYLE` |
+| Карта участников | сейчас скрыта: `club/features.py` → `PEOPLE_MAP_ENABLED`; при включении — `.env`: `MAPBOX_TOKEN`, `MAPBOX_STYLE` |
 | Включение/выключение функций | `club/features.py` |
 | Тексты «О Клубе», ценности, политика, контакты | посты типа «Доки» (`/docs/about/` и т.д.), правятся на сайте |
 | Ачивки | `common/data/achievements.py` (сейчас пусто), затем `manage.py update_achievements` |

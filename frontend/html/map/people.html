@@ -23,11 +23,14 @@
 {% endblock %}
 
 {% block css %}
-    <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet">
+    {% if features.PEOPLE_MAP_ENABLED %}
+        <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet">
+    {% endif %}
 {% endblock %}
 
 {% block content %}
     <div class="people">
+        {% if features.PEOPLE_MAP_ENABLED %}
         <div class="people-map">
             <people-map geojson="{% users_geo_json users_for_map %}"
                         messages="{% map_messages_geo_json map_messages me %}"
@@ -40,6 +43,7 @@
                         map-style="{{ settings.MAPBOX_STYLE }}"
                         class="people-map-container"></people-map>
         </div>
+        {% endif %}
 
         <form action="." method="get">
             <div class="people-wrapper">
@@ -112,10 +116,12 @@
                             <label for="filter_active_members">💚 Активные юзеры</label>
                         </div>
 
+                        {% if features.PEOPLE_MAP_ENABLED %}
                         <div class="people-filters-tag">
                             <input type="checkbox" name="filters" value="messages_only" id="filter_messages_only" {% if "messages_only" in people_query.filters %}checked{% endif %} @change="$event.target.form.submit()">
                             <label for="filter_messages_only">💬 Только сообщения</label>
                         </div>
+                        {% endif %}
 
                         <div class="people-filters-header">Путешествия</div>
 

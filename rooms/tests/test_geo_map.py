@@ -1,5 +1,6 @@
 import json
 from datetime import datetime, timedelta
+from unittest.mock import patch
 
 from django.test import TestCase
 
@@ -86,6 +87,7 @@ class TestRoomsMapGeoJson(TestCase):
         self.assertNotIn("areas", payload)
 
 
+@patch("club.features.PEOPLE_MAP_ENABLED", True)
 class TestPeoplePageRendersRooms(TestCase):
     def setUp(self):
         user = User.objects.create(

@@ -118,7 +118,7 @@
 - [ ] **Бот клуба**: создать в BotFather, вписать в `.env` `TELEGRAM_TOKEN`, **адрес бота** `TELEGRAM_BOT_URL` (`https://t.me/имя_бота`) и `TELEGRAM_ADMIN_CHAT_ID` — без него бот не запускается. Без адреса бот не узнаёт, что к нему обращаются через @, и не отвечает на упоминания в чатах.
 - [ ] Каналы и чаты клуба: `TELEGRAM_CLUB_CHANNEL_URL`, `TELEGRAM_CLUB_CHANNEL_ID`, `TELEGRAM_CLUB_CHAT_ID`, `TELEGRAM_ONLINE_CHANNEL_URL`, `TELEGRAM_ONLINE_CHANNEL_ID`, `TELEGRAM_BEST_COMMENTS_CHANNEL_ID`, `TELEGRAM_VIBES_CHAT_ID`, `TELEGRAM_PARLIAMENT_CHAT_ID`, `TELEGRAM_EVENTS_CHAT_ID`. Незаданные просто отключают свою функцию.
 - [ ] Бот «Справочной», если нужен: `TELEGRAM_HELP_DESK_BOT_TOKEN` и др. ([`helpdeskbot/config.py`](helpdeskbot/config.py)) — без него сервис [`helpdeskbot`](helpdeskbot) на сервере падает.
-- [ ] Карта участников: свой токен Mapbox → `MAPBOX_TOKEN` (и при желании `MAPBOX_STYLE`). Проверить, что Mapbox доступен из России; если нет — карту отключить или заменить.
+- [ ] Карта участников **скрыта** (`PEOPLE_MAP_ENABLED = False` в [`club/features.py`](club/features.py)); страница `/people/` показывает только поиск и список. Чтобы вернуть: включить флаг и задать свой токен Mapbox → `MAPBOX_TOKEN` (и при желании `MAPBOX_STYLE`). Проверить, что Mapbox доступен из России; если нет — карту отключить или заменить.
 - [ ] **Комнаты** (`/rooms/`, разделы по темам) — создать в godmode. Шаблоны уже ссылаются на комнаты `questions` («Справочная») и `best_comments`, без них ссылки ведут на 404.
 - [ ] **Сеть чатов** (`/network/`) — пусто, наполняется в godmode.
 - [ ] **Ачивки клуба**: [`common/data/achievements.py`](common/data/achievements.py) (сейчас пусто). Команда `update_achievements` удаляет из базы ачивки, которых нет в списке.

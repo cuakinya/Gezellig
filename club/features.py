@@ -11,3 +11,9 @@ PRIVATE_FEED = True
 # Enable auth and payment via Patreon
 #   See settings.py for more configs (PATREON_ - prefixed)
 PATREON_AUTH_ENABLED = False
+
+# Show the people map (Mapbox) on /people/ and the map point picker in the profile editor
+#   True — map is shown, requires MAPBOX_TOKEN (see settings.py)
+#   False — map is hidden, /people/ shows only the search and the list of members;
+#           saved coordinates of users and map messages stay in the database untouched
+PEOPLE_MAP_ENABLED = False

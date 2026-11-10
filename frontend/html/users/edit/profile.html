@@ -6,7 +6,9 @@
 {% endblock %}
 
 {% block css %}
-    <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet">
+    {% if features.PEOPLE_MAP_ENABLED %}
+        <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet">
+    {% endif %}
 {% endblock %}
 
 {% block content %}
@@ -88,6 +90,7 @@
                     {% if form.city.errors %}<span class="form-row-errors">{{ form.city.errors }}</span>{% endif %}
                 </div>
 
+                {% if features.PEOPLE_MAP_ENABLED %}
                 <div class="form-row" id="map-location">
                     <label class="form-label">
                         Где отображать вас на общей <strong><a href="{% url "people" %}">карте</a></strong>?
@@ -102,6 +105,13 @@
                     {% if form.longitude.errors %}<span class="form-row-errors">Longitude: {{ form.longitude.errors }}</span>{% endif %}
                     {% if form.geo.errors %}<span class="form-row-errors">Geo: {{ form.geo.errors }}</span>{% endif %}
                 </div>
+                {% else %}
+                    {# карта скрыта (features.PEOPLE_MAP_ENABLED): передаём сохранённую точку как есть, иначе она сотрётся при сохранении профиля #}
+                    {% if user.latitude and user.longitude %}
+                        <input type="hidden" name="latitude" value="{{ user.latitude | stringformat:"f" }}">
+                        <input type="hidden" name="longitude" value="{{ user.longitude | stringformat:"f" }}">
+                    {% endif %}
+                {% endif %}
 
                 <div class="form-row">
                     <label for="{{ form.country.id_for_label }}" class="form-label">

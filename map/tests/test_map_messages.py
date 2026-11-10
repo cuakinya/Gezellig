@@ -295,6 +295,7 @@ class TestMapMessagesGeoJson(TestCase):
         )
 
 
+@patch("club.features.PEOPLE_MAP_ENABLED", True)
 class TestPeoplePageRendersMessages(TestCase):
     def setUp(self):
         self.user = _create_user("page_viewer")
